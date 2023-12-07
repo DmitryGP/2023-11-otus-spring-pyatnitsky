@@ -22,13 +22,13 @@ public class CsvQuestionDaoTest {
     private CsvQuestionDao csvQuestionDao;
 
     @BeforeEach
-    void setup(){
+    void setup() {
         fileNameProvider = Mockito.mock(TestFileNameProvider.class);
         csvQuestionDao = new CsvQuestionDao(fileNameProvider);
     }
 
     @Test
-    void getAllQuestionsFromCsvFile(){
+    void getAllQuestionsFromCsvFile() {
 
         Mockito.when(fileNameProvider.getTestFileName()).thenReturn("testQuestions.csv");
 
@@ -36,35 +36,35 @@ public class CsvQuestionDaoTest {
 
         Assertions.assertEquals(3, questions.size());
 
-        Assertions.assertEquals(1, questions.stream().filter(q->q.text().equals("What?")).count());
-        Assertions.assertEquals(1, questions.stream().filter(q->q.text().equals("When?")).count());
-        Assertions.assertEquals(1, questions.stream().filter(q->q.text().equals("Which?")).count());
+        Assertions.assertEquals(1, questions.stream().filter(q -> q.text().equals("What?")).count());
+        Assertions.assertEquals(1, questions.stream().filter(q -> q.text().equals("When?")).count());
+        Assertions.assertEquals(1, questions.stream().filter(q -> q.text().equals("Which?")).count());
 
-        Question qu = questions.stream().filter(q->q.text().equals("What?")).findFirst().get();
+        Question qu = questions.stream().filter(q -> q.text().equals("What?")).findFirst().get();
 
         Assertions.assertEquals(2, qu.answers().size());
     }
 
     @ParameterizedTest
     @ArgumentsSource(HasQuestionWithAnswersArgsProvider.class)
-    void hasQuestionWithAnswers(String text, List<Answer> answers){
+    void hasQuestionWithAnswers(String text, List<Answer> answers) {
         Mockito.when(fileNameProvider.getTestFileName()).thenReturn("testQuestions.csv");
 
         List<Question> questions = csvQuestionDao.findAll();
 
-        Question qu = questions.stream().filter(q->q.text().equals(text)).findFirst().get();
+        Question qu = questions.stream().filter(q -> q.text().equals(text)).findFirst().get();
 
         Assertions.assertEquals(answers.size(), qu.answers().size());
 
         for (Answer expectedAnswer :
                 answers) {
-            Answer resultAnswer = qu.answers().stream().filter(a->a.text().equals(expectedAnswer.text())).findFirst().get();
+            Answer resultAnswer = qu.answers().stream().filter(a -> a.text().equals(expectedAnswer.text())).findFirst().get();
             Assertions.assertEquals(expectedAnswer.isCorrect(), resultAnswer.isCorrect());
         }
     }
 
 
-    static class HasQuestionWithAnswersArgsProvider implements ArgumentsProvider{
+    static class HasQuestionWithAnswersArgsProvider implements ArgumentsProvider {
 
         @Override
         public Stream<? extends Arguments> provideArguments(ExtensionContext extensionContext) throws Exception {
