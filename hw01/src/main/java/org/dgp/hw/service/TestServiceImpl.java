@@ -22,13 +22,11 @@ public class TestServiceImpl implements TestService {
 
         List<Question> questions = questionDao.findAll();
 
-        for (Question q :
-                questions) {
+        for (Question q : questions) {
             ioService.printFormattedLine("%s", q.text());
 
             ioService.printFormattedLine("\tPossible answers:");
-            for (Answer answer :
-                    q.answers()) {
+            for (Answer answer : q.answers()) {
                 ioService.printFormattedLine("\t\t%s", answer.text());
             }
         }
