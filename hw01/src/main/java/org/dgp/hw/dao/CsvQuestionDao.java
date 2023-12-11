@@ -23,7 +23,7 @@ public class CsvQuestionDao implements QuestionDao {
         String questionCsvFileName = fileNameProvider.getTestFileName();
         List dtoList;
 
-        try (Reader streamReader = getStreamReaderFor(questionCsvFileName)){
+        try (Reader streamReader = getStreamReaderFor(questionCsvFileName)) {
             dtoList = new CsvToBeanBuilder(streamReader)
                     .withType(QuestionDto.class).withSeparator(';').withSkipLines(1).build().parse();
 

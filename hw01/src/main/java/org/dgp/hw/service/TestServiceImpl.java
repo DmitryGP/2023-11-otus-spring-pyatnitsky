@@ -26,8 +26,11 @@ public class TestServiceImpl implements TestService {
             ioService.printFormattedLine("%s", q.text());
 
             ioService.printFormattedLine("\tPossible answers:");
+            int answerIndex = 1;
             for (Answer answer : q.answers()) {
-                ioService.printFormattedLine("\t\t%s", answer.text());
+                String correctAnswer = answer.isCorrect() ? "Correct" : "Not correct";
+                ioService.printFormattedLine("\t\t%s. %s [%s]" , answerIndex, answer.text(), correctAnswer);
+                answerIndex++;
             }
         }
     }
