@@ -3,7 +3,6 @@ package org.dgp.hw.service;
 import lombok.RequiredArgsConstructor;
 import org.dgp.hw.config.TestConfig;
 import org.dgp.hw.domain.TestResult;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 @Service

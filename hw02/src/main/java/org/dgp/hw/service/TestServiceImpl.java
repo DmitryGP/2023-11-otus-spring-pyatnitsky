@@ -15,26 +15,35 @@ public class TestServiceImpl implements TestService {
 
     private final QuestionDao questionDao;
 
+    private final String promptAnswer = "Please, enter the number of your answer";
+
+    private final String errorMessage = "Entered value is not valid.";
+
+    private final String mainPrompt = "Please answer the questions below%n";
+
+    private final String answersTitle = "\tPossible answers:";
+
     @Override
     public TestResult executeTestFor(Student student) {
         ioService.printLine("");
-        ioService.printFormattedLine("Please answer the questions below%n");
+        ioService.printFormattedLine(mainPrompt);
         var questions = questionDao.findAll();
         var testResult = new TestResult(student);
 
         for (var question: questions) {
-            var isAnswerValid = false; // Задать вопрос, получить ответ
+            var isAnswerValid = false;
             ioService.printFormattedLine("%s", question.text());
-            ioService.printFormattedLine("\tPossible answers:");
+            ioService.printFormattedLine(answersTitle);
 
             int answerIndex = 0;
             for (Answer answer : question.answers()) {
                 answerIndex++;
                 ioService.printFormattedLine("\t\t%s. %s" , answerIndex, answer.text());
             }
-            int studetsAnswer = ioService.readIntForRangeWithPrompt(1, answerIndex, "Please, enter the number of your answer", "");
 
-            isAnswerValid = question.answers().get(studetsAnswer - 1).isCorrect();
+            int studentAnswer = ioService.readIntForRangeWithPrompt(1, answerIndex, promptAnswer, errorMessage);
+
+            isAnswerValid = question.answers().get(studentAnswer - 1).isCorrect();
 
             testResult.applyAnswer(question, isAnswerValid);
         }
