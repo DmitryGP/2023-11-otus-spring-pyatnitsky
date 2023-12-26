@@ -10,10 +10,11 @@ import java.util.Locale;
 @ConfigurationProperties(prefix = "application")
 public class AppProps {
     private final Locale locale;
+
     private final int rightAnswersCountToPass;
 
     @ConstructorBinding
-    public AppProps(Locale locale, int rightAnswersCountToPass){
+    public AppProps(Locale locale, int rightAnswersCountToPass) {
         this.locale = locale;
         this.rightAnswersCountToPass = rightAnswersCountToPass;
     }

@@ -1,6 +1,5 @@
 package org.dgp.hw.service;
 
-import lombok.RequiredArgsConstructor;
 import org.dgp.hw.dao.QuestionDao;
 import org.dgp.hw.domain.Answer;
 import org.dgp.hw.domain.Student;
@@ -8,20 +7,29 @@ import org.dgp.hw.domain.TestResult;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class TestServiceImpl implements TestService {
 
     private final IOService ioService;
 
     private final QuestionDao questionDao;
 
-    private final String promptAnswer = "Please, enter the number of your answer";
+    private final String promptAnswer;
 
-    private final String errorMessage = "Entered value is not valid.";
+    private final String errorMessage;
 
-    private final String mainPrompt = "Please answer the questions below%n";
+    private final String mainPrompt;
 
-    private final String answersTitle = "\tPossible answers:";
+    private final String answersTitle;
+
+    public TestServiceImpl(IOService ioService, QuestionDao questionDao, LocalizedStringService localizedStringService) {
+        this.ioService = ioService;
+        this.questionDao = questionDao;
+
+        promptAnswer = localizedStringService.getString("test.answer_prompt");
+        errorMessage = localizedStringService.getString("test.error_message");
+        mainPrompt = localizedStringService.getString("test.main_prompt");
+        answersTitle = "\t" + localizedStringService.getString("test.answers_title") + ":";
+    }
 
     @Override
     public TestResult executeTestFor(Student student) {

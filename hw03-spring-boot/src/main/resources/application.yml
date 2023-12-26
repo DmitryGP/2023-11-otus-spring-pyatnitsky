@@ -4,5 +4,5 @@ spring:
     encoding: "UTF-8"
 
 application:
-  locale: en
+  locale: ru_Ru
   rightAnswersCountToPass: 3
