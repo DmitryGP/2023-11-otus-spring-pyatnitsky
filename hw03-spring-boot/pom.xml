@@ -14,7 +14,7 @@
 	<artifactId>hw03-spring-boot</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>hw03-spring-boot</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Student testing application on Spring Boot</description>
 	<properties>
 		<java.version>21</java.version>
 		<checkstyle-plugin.version>3.2.2</checkstyle-plugin.version>

@@ -1,7 +1,7 @@
 package org.dgp.hw.service;
 
 import lombok.AllArgsConstructor;
-import org.dgp.hw.config.AppProps;
+import org.dgp.hw.config.LocaleConfig;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
@@ -9,12 +9,12 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class LocalizedStringServiceImpl implements LocalizedStringService {
 
-    private final AppProps appProps;
+    private final LocaleConfig localeConfig;
 
     private final MessageSource messageSource;
 
     @Override
     public String getString(String code) {
-        return messageSource.getMessage(code, null, appProps.getLocale());
+        return messageSource.getMessage(code, null, localeConfig.getLocale());
     }
 }

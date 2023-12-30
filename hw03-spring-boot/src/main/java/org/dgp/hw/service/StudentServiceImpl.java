@@ -1,29 +1,20 @@
 package org.dgp.hw.service;
 
+import lombok.RequiredArgsConstructor;
 import org.dgp.hw.domain.Student;
 import org.springframework.stereotype.Service;
 
 @Service
-
+@RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
 
-    private final IOService ioService;
-
-    private final String firstNamePrompt;
-
-    private final String lastNamePrompt;
-
-    public StudentServiceImpl(IOService ioService, LocalizedStringService localizedStringService) {
-        this.ioService = ioService;
-
-        firstNamePrompt = localizedStringService.getString("student.firstname");
-        lastNamePrompt = localizedStringService.getString("student.lastname");
-    }
+    private final LocalizedIOService ioService;
 
     @Override
     public Student determineCurrentStudent() {
-        var firstName = ioService.readStringWithPrompt(firstNamePrompt);
-        var lastName = ioService.readStringWithPrompt(lastNamePrompt);
+        var firstName = ioService.readStringWithPromptLocalized("student.firstname");
+        var lastName = ioService.readStringWithPromptLocalized("student.lastname");
+
         return new Student(firstName, lastName);
     }
 }

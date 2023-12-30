@@ -4,5 +4,8 @@ spring:
     encoding: "UTF-8"
 
 application:
-  locale: ru_Ru
+  locale: en
   rightAnswersCountToPass: 3
+  fileNameByLocale:
+    ru-RU: questions_ru_Ru.csv
+    en: questions_en.csv

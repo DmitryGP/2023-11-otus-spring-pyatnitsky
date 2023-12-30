@@ -1,7 +1,7 @@
 package org.dgp.hw.service;
 
 import lombok.RequiredArgsConstructor;
-import org.dgp.hw.config.AppProps;
+import org.dgp.hw.config.TestConfig;
 import org.dgp.hw.domain.TestResult;
 import org.springframework.stereotype.Service;
 
@@ -9,35 +9,30 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ResultServiceImpl implements ResultService {
 
-    private final AppProps appProps;
+    private final TestConfig testConfig;
 
-    private final IOService ioService;
-
-    private final LocalizedStringService localizedStringService;
+    private final LocalizedIOService ioService;
 
     @Override
     public void showResult(TestResult testResult) {
         ioService.printLine("");
 
-        ioService.printFormattedLine("%s: ",
-                localizedStringService.getString("result.main_title"));
+        ioService.printLineLocalized("result.main_title");
 
-        ioService.printFormattedLine("%s: %s",
-                localizedStringService.getString("result.student"),
+        ioService.printFormattedLineLocalized("result.student",
                 testResult.getStudent().getFullName());
 
-        ioService.printFormattedLine("%s: %d",
-                localizedStringService.getString("result.answer_count"),
+        ioService.printFormattedLineLocalized("result.answer_count",
                 testResult.getAnsweredQuestions().size());
 
-        ioService.printFormattedLine("%s: %d",
-                localizedStringService.getString("result.right_answers_count"),
+        ioService.printFormattedLineLocalized("result.right_answers_count",
                 testResult.getRightAnswersCount());
 
-        if (testResult.getRightAnswersCount() >= appProps.getRightAnswersCountToPass()) {
-            ioService.printLine(localizedStringService.getString("result.test_passed"));
+        if (testResult.getRightAnswersCount() >= testConfig.getRightAnswersCountToPass()) {
+            ioService.printLineLocalized("result.test_passed");
             return;
         }
-        ioService.printLine(localizedStringService.getString("result.test_failed"));
+
+        ioService.printLineLocalized("result.test_failed");
     }
 }
