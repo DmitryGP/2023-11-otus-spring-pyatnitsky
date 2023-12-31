@@ -1,0 +1,4 @@
+# Добавить сюда своих вопросов. Эту строку надо пропустить при настройке CsvToBean (withSkipLines)
+What?;something%true|anything%false
+When?;Today%true|Yesterday%false|Never%false
+Which?;this%true|that%false
