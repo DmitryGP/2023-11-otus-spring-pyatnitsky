@@ -5,5 +5,6 @@
 
 * **hw01** - Xml-конфигурация Spring
 * **hw02** - Annotation конфигурация Spring
+* **hw03-spring-boot** - Spring boot приложение
 
 
