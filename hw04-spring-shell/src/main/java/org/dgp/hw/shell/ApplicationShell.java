@@ -38,6 +38,6 @@ public class ApplicationShell {
 
     private Availability isTestCommandAvailable() {
         Supplier<String>  warning = () -> localizedStringService.getString("login.warning");
-        return userName == null? Availability.unavailable(warning.get()): Availability.available();
+        return userName == null ? Availability.unavailable(warning.get()) : Availability.available();
     }
 }
