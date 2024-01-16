@@ -6,6 +6,8 @@ import org.dgp.hw.services.CommentService;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @ShellComponent
 public class CommentCommands {
@@ -13,12 +15,12 @@ public class CommentCommands {
     private final CommentService commentService;
     private final CommentConverter commentConverter;
 
-    @ShellMethod(value = "Find comment by id", key = "cbid")
+    @ShellMethod(value = "Find comment by book id", key = "cbbid")
     public String findCommentById(long id) {
 
-        return commentService.findById(id)
+        return commentService.findByBookId(id).stream()
                 .map(commentConverter::commentToString)
-                .orElse("Comment with id %d not found".formatted(id));
+                .collect(Collectors.joining("," + System.lineSeparator()));
     }
 
     @ShellMethod(value = "Insert comment", key = "cins")
@@ -35,7 +37,7 @@ public class CommentCommands {
         return commentConverter.commentToString(updatedComment);
     }
 
-    @ShellMethod(value = "Delete comment", key = "cdlt")
+    @ShellMethod(value = "Delete comment", key = "cdel")
     public void deleteComment(long id) {
         commentService.deleteById(id);
     }

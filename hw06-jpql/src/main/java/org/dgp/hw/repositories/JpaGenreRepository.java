@@ -2,6 +2,7 @@ package org.dgp.hw.repositories;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceContextType;
 import lombok.AllArgsConstructor;
 import org.dgp.hw.models.Genre;
 import org.springframework.stereotype.Repository;
@@ -14,7 +15,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class JpaGenreRepository implements GenreRepository {
 
-    @PersistenceContext
+    @PersistenceContext(type = PersistenceContextType.EXTENDED)
     private final EntityManager em;
 
     @Override

@@ -8,12 +8,9 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class CommentConverter {
 
-    private final BookConverter bookConverter;
-
     public String commentToString(Comment comment) {
-        return "Id: %d, text %s, book: [%s]"
+        return "Id: %d, text %s"
                 .formatted(comment.getId(),
-                        comment.getText(),
-                        bookConverter.bookToString(comment.getBook()));
+                        comment.getText());
     }
 }

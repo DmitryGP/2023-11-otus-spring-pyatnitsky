@@ -1,6 +1,8 @@
 package org.dgp.hw.repositories;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceContextType;
 import lombok.AllArgsConstructor;
 import org.dgp.hw.models.Book;
 import org.springframework.stereotype.Repository;
@@ -14,6 +16,7 @@ import static org.springframework.data.jpa.repository.EntityGraph.EntityGraphTyp
 @AllArgsConstructor
 public class JpaBookRepository implements BookRepository {
 
+    @PersistenceContext(type = PersistenceContextType.EXTENDED)
     private final EntityManager em;
 
     @Override

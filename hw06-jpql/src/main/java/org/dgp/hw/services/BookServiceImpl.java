@@ -24,6 +24,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public Optional<Book> findById(long id) {
+
         return bookRepository.findById(id);
     }
 

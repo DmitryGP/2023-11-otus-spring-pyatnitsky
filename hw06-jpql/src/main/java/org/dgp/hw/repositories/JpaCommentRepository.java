@@ -1,6 +1,8 @@
 package org.dgp.hw.repositories;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceContextType;
 import lombok.AllArgsConstructor;
 import org.dgp.hw.models.Comment;
 import org.springframework.stereotype.Repository;
@@ -12,6 +14,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class JpaCommentRepository implements CommentRepository {
 
+    @PersistenceContext(type = PersistenceContextType.EXTENDED)
     private final EntityManager em;
 
     @Override
@@ -22,7 +25,7 @@ public class JpaCommentRepository implements CommentRepository {
     @Override
     public List<Comment> findByBookId(long id) {
 
-        var query = em.createQuery("select c from Comment c where c.book_id = :id", Comment.class);
+        var query = em.createQuery("select c from Comment c where c.book.Id = :id", Comment.class);
 
         query.setParameter("id", id);
 

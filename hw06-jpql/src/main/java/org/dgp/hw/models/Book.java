@@ -25,7 +25,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "books")
-@NamedEntityGraph(name = "book-graph", attributeNodes = {@NamedAttributeNode("author"), @NamedAttributeNode("genre")})
+@NamedEntityGraph(name = "book-graph", attributeNodes = {@NamedAttributeNode("author"), @NamedAttributeNode("genre"), @NamedAttributeNode("comments")})
 public class Book {
 
     public Book(long id, String title, Author author, Genre genre) {
@@ -47,7 +47,6 @@ public class Book {
     private Genre genre;
 
     @OneToMany(targetEntity = Comment.class, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "book")
-    @JoinColumn(name = "book_id")
     private List<Comment> comments;
 
 }
