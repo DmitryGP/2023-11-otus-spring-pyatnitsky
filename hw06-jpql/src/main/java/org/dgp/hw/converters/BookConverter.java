@@ -1,6 +1,7 @@
 package org.dgp.hw.converters;
 
 import lombok.RequiredArgsConstructor;
+import org.dgp.hw.dto.BookDto;
 import org.dgp.hw.models.Book;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +13,7 @@ public class BookConverter {
 
     private final GenreConverter genreConverter;
 
-    public String bookToString(Book book) {
+    public String bookToString(BookDto book) {
         return "Id: %d, title: %s, author: {%s}, genres: [%s]".formatted(
                 book.getId(),
                 book.getTitle(),

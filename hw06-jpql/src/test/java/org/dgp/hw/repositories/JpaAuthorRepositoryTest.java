@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
 import java.util.List;
@@ -15,10 +15,10 @@ import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DisplayName("Репозиторий на основе Jdbc для работы с авторами ")
-@JdbcTest
-@Import({JpaAuthorRepository.class})
-class JdbcAuthorRepositoryTest {
+@DisplayName("Репозиторий на основе Jpa для работы с авторами ")
+@DataJpaTest
+@Import(JpaAuthorRepository.class)
+class JpaAuthorRepositoryTest {
 
     @Autowired
     private JpaAuthorRepository repository;
@@ -33,10 +33,10 @@ class JdbcAuthorRepositoryTest {
     @DisplayName("должен загружать автора по id")
     @ParameterizedTest
     @MethodSource("getDbAuthors")
-    void shouldReturnCorrectBookById(Author expectedAuthor) {
-        var actualBook = repository.findById(expectedAuthor.getId());
+    void shouldReturnCorrectAuthorById(Author expectedAuthor) {
+        var actualAuthor = repository.findById(expectedAuthor.getId());
 
-        assertThat(actualBook).isPresent()
+        assertThat(actualAuthor).isPresent()
                 .get()
                 .isEqualTo(expectedAuthor);
     }

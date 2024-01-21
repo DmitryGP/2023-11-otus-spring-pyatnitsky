@@ -16,7 +16,7 @@ import static org.springframework.data.jpa.repository.EntityGraph.EntityGraphTyp
 @AllArgsConstructor
 public class JpaBookRepository implements BookRepository {
 
-    @PersistenceContext(type = PersistenceContextType.EXTENDED)
+    @PersistenceContext
     private final EntityManager em;
 
     @Override
@@ -43,7 +43,10 @@ public class JpaBookRepository implements BookRepository {
             em.persist(book);
             return book;
         }
-        return em.merge(book);
+
+        var savedBook = em.merge(book);
+
+        return savedBook;
     }
 
     @Override

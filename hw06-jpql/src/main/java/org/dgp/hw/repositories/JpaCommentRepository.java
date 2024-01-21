@@ -14,7 +14,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class JpaCommentRepository implements CommentRepository {
 
-    @PersistenceContext(type = PersistenceContextType.EXTENDED)
+    @PersistenceContext
     private final EntityManager em;
 
     @Override
@@ -36,9 +36,12 @@ public class JpaCommentRepository implements CommentRepository {
     public Comment save(Comment comment) {
         if (comment.getId() == 0) {
             em.persist(comment);
+
             return comment;
         }
-        return em.merge(comment);
+        var savedComment = em.merge(comment);
+
+        return savedComment;
     }
 
     @Override

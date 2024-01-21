@@ -1,9 +1,9 @@
 package org.dgp.hw.services;
 
-import org.dgp.hw.models.Author;
+import org.dgp.hw.dto.AuthorDto;
 
 import java.util.List;
 
 public interface AuthorService {
-    List<Author> findAll();
+    List<AuthorDto> findAll();
 }

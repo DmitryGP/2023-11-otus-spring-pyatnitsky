@@ -1,5 +1,6 @@
 package org.dgp.hw.services;
 
+import org.dgp.hw.dto.CommentDto;
 import org.dgp.hw.models.Comment;
 
 import java.util.List;
@@ -7,13 +8,13 @@ import java.util.Optional;
 
 public interface CommentService {
 
-    Optional<Comment> findById(long id);
+    Optional<CommentDto> findById(long id);
 
-    List<Comment> findByBookId(long id);
+    List<CommentDto> findByBookId(long id);
 
-    Comment insert(String text, long bookId);
+    CommentDto insert(String text, long bookId);
 
-    Comment update(long id, String text, long bookId);
+    CommentDto update(long id, String text, long bookId);
 
     void deleteById(long id);
 }
