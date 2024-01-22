@@ -1,7 +1,6 @@
 package org.dgp.hw.converters;
 
 import org.dgp.hw.dto.GenreDto;
-import org.dgp.hw.models.Genre;
 import org.springframework.stereotype.Component;
 
 @Component

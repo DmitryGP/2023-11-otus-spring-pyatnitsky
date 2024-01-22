@@ -5,14 +5,17 @@ import org.dgp.hw.models.Comment;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,7 +33,7 @@ public class JpaCommentsRepositoryTest {
 
     @DisplayName("должен загружать комментарии по id книги")
     @ParameterizedTest
-    @ArgumentsSource(BookIdCommentIdsArgsProvider.class)
+    @MethodSource("getBookIdCommentIds")
     void shouldReturnCorrectCommentsByBookId(long bookId, List<Long> expectedCommentIds) {
         var actualComments = repository.findByBookId(bookId);
         var expectedComments = getExpectedComments(expectedCommentIds);
@@ -92,10 +95,16 @@ public class JpaCommentsRepositoryTest {
         comment = em.find(Comment.class, 1);
 
         assertThat(comment).isNull();
+    }
 
-        var book = em.find(Book.class, bookId);
+    public static Stream<Arguments> getCommentIds() {
+        return IntStream.range(1, 7).mapToObj(Arguments::of);
+    }
 
-        assertThat(book.getComments().stream().filter(c -> c.getId() == 1).count()).isEqualTo(0);
+    public static Stream<Arguments> getBookIdCommentIds() {
+        return Stream.of(Arguments.of(1L, new ArrayList<>(List.of(3L, 6L))),
+                Arguments.of(2L, new ArrayList<>(List.of(1L, 4L))),
+                Arguments.of(3L, new ArrayList<>(List.of(2L, 5L))));
     }
 
     private List<Comment> getExpectedComments(List<Long> expectedCommentIds) {

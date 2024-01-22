@@ -1,17 +1,18 @@
 package org.dgp.hw.repositories;
 
 import org.dgp.hw.models.Genre;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 
-import java.util.List;
-import java.util.stream.IntStream;
+import java.util.stream.LongStream;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,18 +24,16 @@ public class JpaGenreRepositoryTest {
     @Autowired
     private JpaGenreRepository repository;
 
-    private List<Genre> dbGenres;
-
-    @BeforeEach
-    void setUp() {
-        dbGenres = getDbGenres();
-    }
+    @Autowired
+    private TestEntityManager em;
 
     @DisplayName("должен загружать жанр по id")
     @ParameterizedTest
     @MethodSource("getDbGenres")
-    void shouldReturnCorrectGenreById(Genre expectedGenre) {
-        var actualGenre = repository.findById(expectedGenre.getId());
+    void shouldReturnCorrectGenreById(Long genreId) {
+        var actualGenre = repository.findById(genreId);
+
+        var expectedGenre = em.find(Genre.class, genreId);
 
         assertThat(actualGenre).isPresent()
                 .get()
@@ -46,13 +45,12 @@ public class JpaGenreRepositoryTest {
     void shouldLoadAllGenres() {
         var actualGenres = repository.findAll();
 
-        assertThat(actualGenres).containsExactlyElementsOf(dbGenres);
+        var allGenres = LongStream.range(1, 4).mapToObj(i -> em.find(Genre.class, i)).toList();
+
+        assertThat(actualGenres).containsExactlyElementsOf(allGenres);
     }
 
-
-    private static List<Genre> getDbGenres() {
-        return IntStream.range(1, 4).boxed()
-                .map(id -> new Genre(id, "Genre_" + id))
-                .toList();
+    public static Stream<Arguments> getDbGenres() {
+        return LongStream.range(1, 4).mapToObj(Arguments::of);
     }
 }

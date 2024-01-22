@@ -3,8 +3,7 @@ package org.dgp.hw.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
+import org.dgp.hw.models.Book;
 
 @Data
 @AllArgsConstructor
@@ -19,7 +18,8 @@ public class BookDto {
 
     private GenreDto genre;
 
-    private List<CommentDto> comments;
 
-
+    public BookDto(Book book) {
+        this(book.getId(), book.getTitle(), new AuthorDto(book.getAuthor()), new GenreDto(book.getGenre()));
+    }
 }

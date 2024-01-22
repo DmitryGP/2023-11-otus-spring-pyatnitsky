@@ -8,7 +8,6 @@ import org.springframework.shell.standard.ShellMethod;
 
 import java.util.stream.Collectors;
 
-@SuppressWarnings({"SpellCheckingInspection", "unused"})
 @RequiredArgsConstructor
 @ShellComponent
 public class BookCommands {

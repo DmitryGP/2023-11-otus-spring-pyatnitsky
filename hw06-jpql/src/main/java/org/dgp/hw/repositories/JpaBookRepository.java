@@ -2,7 +2,6 @@ package org.dgp.hw.repositories;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.PersistenceContextType;
 import lombok.AllArgsConstructor;
 import org.dgp.hw.models.Book;
 import org.springframework.stereotype.Repository;
@@ -53,7 +52,7 @@ public class JpaBookRepository implements BookRepository {
     public void deleteById(long id) {
         var book = em.find(Book.class, id);
 
-        if(book != null) {
+        if (book != null) {
             em.remove(book);
         }
     }

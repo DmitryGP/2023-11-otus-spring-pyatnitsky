@@ -1,7 +1,6 @@
 package org.dgp.hw.converters;
 
 import org.dgp.hw.dto.AuthorDto;
-import org.dgp.hw.models.Author;
 import org.springframework.stereotype.Component;
 
 @Component

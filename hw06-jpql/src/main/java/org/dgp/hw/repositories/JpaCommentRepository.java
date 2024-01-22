@@ -2,7 +2,6 @@ package org.dgp.hw.repositories;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.PersistenceContextType;
 import lombok.AllArgsConstructor;
 import org.dgp.hw.models.Comment;
 import org.springframework.stereotype.Repository;
@@ -48,7 +47,7 @@ public class JpaCommentRepository implements CommentRepository {
     public void deleteById(long id) {
         var comment = em.find(Comment.class, id);
 
-        if(comment != null) {
+        if (comment != null) {
             em.remove(comment);
         }
     }

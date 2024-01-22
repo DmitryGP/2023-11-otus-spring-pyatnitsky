@@ -1,7 +1,6 @@
 package org.dgp.hw.services;
 
 import org.dgp.hw.dto.CommentDto;
-import org.dgp.hw.models.Comment;
 
 import java.util.List;
 import java.util.Optional;

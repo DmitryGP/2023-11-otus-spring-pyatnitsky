@@ -2,7 +2,6 @@ package org.dgp.hw.converters;
 
 import lombok.AllArgsConstructor;
 import org.dgp.hw.dto.CommentDto;
-import org.dgp.hw.models.Comment;
 import org.springframework.stereotype.Component;
 
 @Component

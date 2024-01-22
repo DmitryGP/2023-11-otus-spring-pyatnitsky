@@ -1,17 +1,18 @@
 package org.dgp.hw.repositories;
 
 import org.dgp.hw.models.Author;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 
-import java.util.List;
-import java.util.stream.IntStream;
+import java.util.stream.LongStream;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,18 +24,17 @@ class JpaAuthorRepositoryTest {
     @Autowired
     private JpaAuthorRepository repository;
 
-    private List<Author> dbAuthors;
-
-    @BeforeEach
-    void setUp() {
-        dbAuthors = getDbAuthors();
-    }
+    @Autowired
+    private TestEntityManager em;
 
     @DisplayName("должен загружать автора по id")
     @ParameterizedTest
     @MethodSource("getDbAuthors")
-    void shouldReturnCorrectAuthorById(Author expectedAuthor) {
-        var actualAuthor = repository.findById(expectedAuthor.getId());
+    void shouldReturnCorrectAuthorById(Long authorId) {
+
+        var actualAuthor = repository.findById(authorId);
+
+        var expectedAuthor = em.find(Author.class, authorId);
 
         assertThat(actualAuthor).isPresent()
                 .get()
@@ -46,12 +46,12 @@ class JpaAuthorRepositoryTest {
     void shouldLoadAllAuthors() {
         var actualAuthors = repository.findAll();
 
-        assertThat(actualAuthors).containsExactlyElementsOf(dbAuthors);
+        var allAuthors = LongStream.range(1, 4).mapToObj(i -> em.find(Author.class, i)).toList();
+
+        assertThat(actualAuthors).containsExactlyElementsOf(allAuthors);
     }
 
-    private static List<Author> getDbAuthors() {
-        return IntStream.range(1, 4).boxed()
-                .map(id -> new Author(id, "Author_" + id))
-                .toList();
+    public static Stream<Arguments> getDbAuthors() {
+        return LongStream.range(1, 4).mapToObj(Arguments::of);
     }
 }

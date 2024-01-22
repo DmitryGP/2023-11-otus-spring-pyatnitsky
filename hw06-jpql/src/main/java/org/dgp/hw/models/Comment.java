@@ -1,9 +1,18 @@
 package org.dgp.hw.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Column;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -11,24 +20,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "comments")
-@EqualsAndHashCode()
 @NamedEntityGraph(name = "comment-graph", attributeNodes = {@NamedAttributeNode("book")})
 public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long Id;
+    private long id;
 
     @Column(name = "text")
     private String text;
 
     @ManyToOne(targetEntity = Book.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
-    @EqualsAndHashCode.Exclude
     private Book book;
-
-    @Override
-    public String toString() {
-        return "Comment id = %d [%s] for book id = %d".formatted(Id, text, book != null ? book.getId() : 0);
-    }
 }

@@ -8,5 +8,6 @@
 * **hw03-spring-boot** - Spring boot приложение
 * **hw04-spring-shell** - Spring boot приложение с использованием Spring Shell
 * **hw05-jdbc** - Spring boot приложение работающее с jdbc
+* **hw06-jpql** - Spring boot приложение работающее с jpa
 
 

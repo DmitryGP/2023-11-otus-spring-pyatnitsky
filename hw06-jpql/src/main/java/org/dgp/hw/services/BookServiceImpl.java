@@ -1,9 +1,8 @@
 package org.dgp.hw.services;
 
 import lombok.RequiredArgsConstructor;
-import org.dgp.hw.dto.*;
+import org.dgp.hw.dto.BookDto;
 import org.dgp.hw.exceptions.EntityNotFoundException;
-import org.dgp.hw.models.Author;
 import org.dgp.hw.models.Book;
 import org.dgp.hw.repositories.AuthorRepository;
 import org.dgp.hw.repositories.BookRepository;
@@ -28,18 +27,18 @@ public class BookServiceImpl implements BookService {
 
         var optionalBook = bookRepository.findById(id);
 
-        if(optionalBook.isEmpty()) {
+        if (optionalBook.isEmpty()) {
             return Optional.empty();
         }
         var book = optionalBook.get();
-        BookDto bookDto = BookDtoFactory.getBookDto(book);
+        BookDto bookDto = new BookDto(book);
 
         return Optional.of(bookDto);
     }
 
     @Override
     public List<BookDto> findAll() {
-        return bookRepository.findAll().stream().map(BookDtoFactory::getBookDto).toList();
+        return bookRepository.findAll().stream().map(BookDto::new).toList();
     }
 
     @Override
@@ -68,6 +67,6 @@ public class BookServiceImpl implements BookService {
         var book = new Book(id, title, author, genre);
         var savedBook = bookRepository.save(book);
 
-        return BookDtoFactory.getBookDto(savedBook);
+        return new BookDto(savedBook);
     }
 }
