@@ -4,15 +4,19 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.*;
+import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "authors")
-@EqualsAndHashCode
 @Getter
 @Setter
+@EqualsAndHashCode
 public class Author {
 
     @Id

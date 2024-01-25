@@ -1,8 +1,6 @@
 package org.dgp.hw.models;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.NamedAttributeNode;
-import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
