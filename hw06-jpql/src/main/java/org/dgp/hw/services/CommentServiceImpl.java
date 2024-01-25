@@ -23,32 +23,19 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public Optional<CommentDto> findById(long id) {
-
-        var optionalComment = commentRepository.findById(id);
-
-        if (optionalComment.isEmpty()) {
-            return Optional.empty();
-        }
-
-        var comment = optionalComment.get();
-
-        var commentDto = new CommentDto(comment);
-
-        return Optional.of(commentDto);
+        return commentRepository.findById(id).map(CommentDto::new);
     }
 
 
     @Override
     @Transactional
     public List<CommentDto> findByBookId(long id) {
-        var comments = commentRepository.findByBookId(id);
-
-        return comments.stream().map(CommentDto::new).toList();
+        return commentRepository.findByBookId(id).stream().map(CommentDto::new).toList();
     }
 
     @Override
     @Transactional
-    public CommentDto insert(String text, long bookId) {
+    public CommentDto ctreate(String text, long bookId) {
         return save(0L, text, bookId);
     }
 
