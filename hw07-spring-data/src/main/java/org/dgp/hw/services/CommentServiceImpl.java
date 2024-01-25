@@ -23,55 +23,49 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public Optional<CommentDto> findById(long id) {
-
-        var optionalComment = commentRepository.findById(id);
-
-        if (optionalComment.isEmpty()) {
-            return Optional.empty();
-        }
-
-        var comment = optionalComment.get();
-
-        var commentDto = new CommentDto(comment);
-
-        return Optional.of(commentDto);
+        return commentRepository.findById(id).map(CommentDto::new);
     }
 
 
     @Override
     @Transactional
     public List<CommentDto> findByBookId(long id) {
-        var comments = commentRepository.findByBookId(id);
-
-        return comments.stream().map(CommentDto::new).toList();
+        return commentRepository.findByBookId(id).stream().map(CommentDto::new).toList();
     }
 
     @Override
     @Transactional
-    public CommentDto insert(String text, long bookId) {
-        return save(0L, text, bookId);
+    public CommentDto create(String text, long bookId) {
+        var book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(bookId)));
+
+        var comment = new Comment(0, text, book);
+
+        var savedComment = commentRepository.save(comment);
+
+        return new CommentDto(savedComment);
     }
 
     @Override
     @Transactional
     public CommentDto update(long id, String text, long bookId) {
-        return save(id, text, bookId);
+        var commentToUpdate = commentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Comment with id=%d not found.".formatted(id)));
+
+        var book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("Book with id=%d not found".formatted(bookId)));
+
+        commentToUpdate.setText(text);
+        commentToUpdate.setBook(book);
+
+        var savedComment = commentRepository.save(commentToUpdate);
+
+        return new CommentDto(savedComment);
     }
 
     @Override
     @Transactional
     public void deleteById(long id) {
         commentRepository.deleteById(id);
-    }
-
-    private CommentDto save(long id, String text, long bookId) {
-        var book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(bookId)));
-
-        var comment = new Comment(id, text, book);
-
-        var savedComment = commentRepository.save(comment);
-
-        return new CommentDto(savedComment);
     }
 }

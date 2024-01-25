@@ -25,15 +25,13 @@ public class BookServiceImpl implements BookService {
     @Override
     public Optional<BookDto> findById(long id) {
 
-        var optionalBook = bookRepository.findById(id);
+        var book = bookRepository.findById(id);
 
-        if (optionalBook.isEmpty()) {
+        if (book.isEmpty()) {
             return Optional.empty();
         }
-        var book = optionalBook.get();
-        BookDto bookDto = new BookDto(book);
 
-        return Optional.of(bookDto);
+        return book.map(BookDto::new);
     }
 
     @Override
@@ -43,30 +41,42 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public BookDto insert(String title, long authorId, long genreId) {
-        return save(0, title, authorId, genreId);
+    public BookDto create(String title, long authorId, long genreId) {
+        var author = authorRepository.findById(authorId)
+                .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
+        var genre = genreRepository.findById(genreId)
+                .orElseThrow(() -> new EntityNotFoundException("Genre with id %d not found".formatted(genreId)));
+
+        var book = new Book(0, title, author, genre);
+
+        var savedBook = bookRepository.save(book);
+
+        return new BookDto(savedBook);
     }
 
     @Override
     @Transactional
     public BookDto update(long id, String title, long authorId, long genreId) {
-        return save(id, title, authorId, genreId);
+
+        var bookToUpdate = bookRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Book with id=%d not found".formatted(id)));
+        var author = authorRepository.findById(authorId)
+                .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
+        var genre = genreRepository.findById(genreId)
+                .orElseThrow(() -> new EntityNotFoundException("Genre with id %d not found".formatted(genreId)));
+
+        bookToUpdate.setTitle(title);
+        bookToUpdate.setAuthor(author);
+        bookToUpdate.setGenre(genre);
+
+        var savedBook = bookRepository.save(bookToUpdate);
+
+        return new BookDto(savedBook);
     }
 
     @Override
     @Transactional
     public void deleteById(long id) {
         bookRepository.deleteById(id);
-    }
-
-    private BookDto save(long id, String title, long authorId, long genreId) {
-        var author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
-        var genre = genreRepository.findById(genreId)
-                .orElseThrow(() -> new EntityNotFoundException("Genre with id %d not found".formatted(genreId)));
-        var book = new Book(id, title, author, genre);
-        var savedBook = bookRepository.save(book);
-
-        return new BookDto(savedBook);
     }
 }
