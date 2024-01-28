@@ -24,14 +24,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Optional<BookDto> findById(long id) {
-
-        var book = bookRepository.findById(id);
-
-        if (book.isEmpty()) {
-            return Optional.empty();
-        }
-
-        return book.map(BookDto::new);
+        return bookRepository.findById(id).map(BookDto::new);
     }
 
     @Override

@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.AllArgsConstructor;
 import org.dgp.hw.models.Book;
+import org.dgp.hw.models.Comment;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,7 +22,15 @@ public class JpaBookRepository implements BookRepository {
     @Override
     public Optional<Book> findById(long id) {
 
-        return Optional.ofNullable(em.find(Book.class, id));
+        var graph = em.getEntityGraph("book-graph");
+
+        var query = em.createQuery("select b from Book b where b.Id = :id", Book.class);
+
+        query.setParameter("id", id);
+
+        query.setHint(FETCH.getKey(), graph);
+
+        return Optional.ofNullable(query.getSingleResult());
     }
 
     @Override
