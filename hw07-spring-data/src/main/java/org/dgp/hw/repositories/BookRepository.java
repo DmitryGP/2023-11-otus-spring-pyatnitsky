@@ -5,9 +5,17 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
 
-    @EntityGraph(attributePaths = {"author", "genre"})
+    @Override
+    @EntityGraph(value = "book-graph")
     List<Book> findAll();
+
+    @Override
+    @EntityGraph(value = "book-graph")
+    Optional<Book> findById(Long id);
+
+
 }

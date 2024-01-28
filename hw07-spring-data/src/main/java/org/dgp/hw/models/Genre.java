@@ -4,11 +4,10 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.EqualsAndHashCode;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -16,7 +15,6 @@ import lombok.EqualsAndHashCode;
 @NoArgsConstructor
 @Entity
 @Table(name = "genres")
-@EqualsAndHashCode
 public class Genre {
 
     @Id
