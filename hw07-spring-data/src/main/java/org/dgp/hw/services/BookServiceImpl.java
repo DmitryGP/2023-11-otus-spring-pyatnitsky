@@ -28,10 +28,6 @@ public class BookServiceImpl implements BookService {
 
         var book = bookRepository.findById(id);
 
-        if (book.isEmpty()) {
-            return Optional.empty();
-        }
-
         return book.map(BookDto::new);
     }
 
