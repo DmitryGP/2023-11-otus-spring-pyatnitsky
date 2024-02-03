@@ -4,7 +4,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.AllArgsConstructor;
 import org.dgp.hw.models.Book;
-import org.dgp.hw.models.Comment;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
