@@ -2,7 +2,8 @@ package org.dgp.hw.services;
 
 import lombok.RequiredArgsConstructor;
 import org.dgp.hw.dto.BookDto;
-import org.dgp.hw.exceptions.EntityNotFoundException;
+import org.dgp.hw.exceptions.NotFoundException;
+import org.dgp.hw.mappers.BookMapper;
 import org.dgp.hw.models.Book;
 import org.dgp.hw.repositories.AuthorRepository;
 import org.dgp.hw.repositories.BookRepository;
@@ -22,34 +23,36 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
 
+    private final BookMapper bookMapper;
+
     @Override
     @Transactional(readOnly = true)
     public Optional<BookDto> findById(long id) {
 
         var book = bookRepository.findById(id);
 
-        return book.map(BookDto::new);
+        return book.map(bookMapper::toDto);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<BookDto> findAll() {
-        return bookRepository.findAll().stream().map(BookDto::new).toList();
+        return bookRepository.findAll().stream().map(bookMapper::toDto).toList();
     }
 
     @Override
     @Transactional
     public BookDto create(String title, long authorId, long genreId) {
         var author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
+                .orElseThrow(() -> new NotFoundException("Author with id %d not found".formatted(authorId)));
         var genre = genreRepository.findById(genreId)
-                .orElseThrow(() -> new EntityNotFoundException("Genre with id %d not found".formatted(genreId)));
+                .orElseThrow(() -> new NotFoundException("Genre with id %d not found".formatted(genreId)));
 
         var book = new Book(0, title, author, genre);
 
         var savedBook = bookRepository.save(book);
 
-        return new BookDto(savedBook);
+        return bookMapper.toDto(savedBook);
     }
 
     @Override
@@ -57,11 +60,11 @@ public class BookServiceImpl implements BookService {
     public BookDto update(long id, String title, long authorId, long genreId) {
 
         var bookToUpdate = bookRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Book with id=%d not found".formatted(id)));
+                .orElseThrow(() -> new NotFoundException("Book with id=%d not found".formatted(id)));
         var author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
+                .orElseThrow(() -> new NotFoundException("Author with id %d not found".formatted(authorId)));
         var genre = genreRepository.findById(genreId)
-                .orElseThrow(() -> new EntityNotFoundException("Genre with id %d not found".formatted(genreId)));
+                .orElseThrow(() -> new NotFoundException("Genre with id %d not found".formatted(genreId)));
 
         bookToUpdate.setTitle(title);
         bookToUpdate.setAuthor(author);
@@ -69,7 +72,7 @@ public class BookServiceImpl implements BookService {
 
         var savedBook = bookRepository.save(bookToUpdate);
 
-        return new BookDto(savedBook);
+        return bookMapper.toDto(savedBook);
     }
 
     @Override

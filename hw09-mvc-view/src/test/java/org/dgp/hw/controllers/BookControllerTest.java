@@ -2,7 +2,9 @@ package org.dgp.hw.controllers;
 
 import org.dgp.hw.dto.AuthorDto;
 import org.dgp.hw.dto.BookDto;
+import org.dgp.hw.dto.BookUpdateDto;
 import org.dgp.hw.dto.GenreDto;
+import org.dgp.hw.mappers.BookMapper;
 import org.dgp.hw.services.AuthorService;
 import org.dgp.hw.services.BookService;
 import org.dgp.hw.services.GenreService;
@@ -37,6 +39,9 @@ public class BookControllerTest {
     @MockBean
     private GenreService genreService;
 
+    @MockBean
+    private BookMapper bookMapper;
+
     @Test
     void getListTest() throws Exception {
         var books = getBooks();
@@ -53,6 +58,12 @@ public class BookControllerTest {
         var books = getBooks();
         var book = books.stream().filter(b -> b.getId() == 1).findAny();
         Mockito.when(bookService.findById(1)).thenReturn(book);
+        var bookUpdateDto = new BookUpdateDto(book.get().getId(),
+                book.get().getTitle(),
+                book.get().getAuthor(),
+                book.get().getGenre());
+        Mockito.when(bookMapper.toDto(book.get()))
+                .thenReturn(bookUpdateDto);
 
         var authors = getAuthors();
         var genres = getGenres();
@@ -63,7 +74,7 @@ public class BookControllerTest {
         mockMvc.perform(get("/edit?id=1"))
                 .andExpect(status().isOk())
                 .andExpect(model().size(3))
-                .andExpect(model().attribute("book", book.get()))
+                .andExpect(model().attribute("book", bookUpdateDto))
                 .andExpect(model().attribute("authors", authors))
                 .andExpect(model().attribute("genres", genres));
     }
@@ -88,10 +99,12 @@ public class BookControllerTest {
     void saveBookInCaseOfCreate() throws Exception {
         var bookServiceInOrder = inOrder(bookService);
 
+
+
         var genre = getGenres().get(0);
         var author = getAuthors().get(0);
 
-        mockMvc.perform(post("/edit?id=0")
+        mockMvc.perform(post("/create")
                         .content("title=The Best Book&author.id=1&genre.id=1")
                         .contentType("application/x-www-form-urlencoded"))
                 .andExpect(status().is(302));

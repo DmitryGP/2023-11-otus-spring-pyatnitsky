@@ -2,7 +2,8 @@ package org.dgp.hw.services;
 
 import lombok.AllArgsConstructor;
 import org.dgp.hw.dto.CommentDto;
-import org.dgp.hw.exceptions.EntityNotFoundException;
+import org.dgp.hw.exceptions.NotFoundException;
+import org.dgp.hw.mappers.CommentMapper;
 import org.dgp.hw.models.Comment;
 import org.dgp.hw.repositories.BookRepository;
 import org.dgp.hw.repositories.CommentRepository;
@@ -20,43 +21,45 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
 
+    private final CommentMapper commentMapper;
+
     @Override
     @Transactional(readOnly = true)
     public Optional<CommentDto> findById(long id) {
-        return commentRepository.findById(id).map(CommentDto::new);
+        return commentRepository.findById(id).map(commentMapper::toDto);
     }
 
 
     @Override
     @Transactional(readOnly = true)
     public List<CommentDto> findByBookId(long id) {
-        return commentRepository.findByBookId(id).stream().map(CommentDto::new).toList();
+        return commentRepository.findByBookId(id).stream().map(commentMapper::toDto).toList();
     }
 
     @Override
     @Transactional
     public CommentDto create(String text, long bookId) {
         var book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(bookId)));
+                .orElseThrow(() -> new NotFoundException("Book with id %d not found".formatted(bookId)));
 
         var comment = new Comment(0, text, book);
 
         var savedComment = commentRepository.save(comment);
 
-        return new CommentDto(savedComment);
+        return commentMapper.toDto(savedComment);
     }
 
     @Override
     @Transactional
     public CommentDto update(long id, String text) {
         var commentToUpdate = commentRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Comment with id=%d not found.".formatted(id)));
+                .orElseThrow(() -> new NotFoundException("Comment with id=%d not found.".formatted(id)));
 
         commentToUpdate.setText(text);
 
         var savedComment = commentRepository.save(commentToUpdate);
 
-        return new CommentDto(savedComment);
+        return commentMapper.toDto(savedComment);
     }
 
     @Override
