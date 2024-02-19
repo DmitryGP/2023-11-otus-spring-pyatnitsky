@@ -64,7 +64,7 @@ public class BookController {
         return "create";
     }
 
-    @PostMapping("/edit")
+    @PutMapping("/edit")
     public String editBook( @Valid BookUpdateDto book) {
 
         bookService.update(book.getId(), book.getTitle(), book.getAuthor().getId(), book.getGenre().getId());

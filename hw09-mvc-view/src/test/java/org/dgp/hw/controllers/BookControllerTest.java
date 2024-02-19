@@ -19,8 +19,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -121,7 +120,7 @@ public class BookControllerTest {
         var genre = getGenres().stream().filter(g -> g.getId() == 2).findAny().get();
         var author = getAuthors().stream().filter(a -> a.getId() == 2).findAny().get();
 
-        mockMvc.perform(post("/edit?id=1")
+        mockMvc.perform(put("/edit?id=1")
                         .content("title=The Best Book&author.id=2&genre.id=2")
                         .contentType("application/x-www-form-urlencoded"))
                 .andExpect(status().is(302));
