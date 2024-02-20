@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -47,9 +46,11 @@ public class BookServiceImpl implements BookService {
     @Transactional
     public BookDto create(BookCreateDto bookDto) {
         var author = authorRepository.findById(bookDto.getAuthor().getId())
-                .orElseThrow(() -> new NotFoundException("Author with id %d not found".formatted(bookDto.getAuthor().getId())));
+                .orElseThrow(() -> new NotFoundException("Author with id %d not found"
+                        .formatted(bookDto.getAuthor().getId())));
         var genre = genreRepository.findById(bookDto.getGenre().getId())
-                .orElseThrow(() -> new NotFoundException("Genre with id %d not found".formatted(bookDto.getGenre().getId())));
+                .orElseThrow(() -> new NotFoundException("Genre with id %d not found"
+                        .formatted(bookDto.getGenre().getId())));
 
         var book = new Book(0, bookDto.getTitle(), author, genre);
 
@@ -65,9 +66,11 @@ public class BookServiceImpl implements BookService {
         var bookToUpdate = bookRepository.findById(bookDto.getId())
                 .orElseThrow(() -> new NotFoundException("Book with id=%d not found".formatted(bookDto.getId())));
         var author = authorRepository.findById(bookDto.getAuthor().getId())
-                .orElseThrow(() -> new NotFoundException("Author with id %d not found".formatted(bookDto.getAuthor().getId())));
+                .orElseThrow(() -> new NotFoundException("Author with id %d not found"
+                        .formatted(bookDto.getAuthor().getId())));
         var genre = genreRepository.findById(bookDto.getGenre().getId())
-                .orElseThrow(() -> new NotFoundException("Genre with id %d not found".formatted(bookDto.getGenre().getId())));
+                .orElseThrow(() -> new NotFoundException("Genre with id %d not found"
+                        .formatted(bookDto.getGenre().getId())));
 
         bookToUpdate.setTitle(bookDto.getTitle());
         bookToUpdate.setAuthor(author);

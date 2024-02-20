@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 public class BookMapper {
 
     private final AuthorMapper authorMapper;
+
     private final GenreMapper genreMapper;
 
     public BookCreateDto toCreateDto(Book book) {

@@ -3,9 +3,7 @@ package org.dgp.hw.controllers;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.dgp.hw.dto.BookCreateDto;
-import org.dgp.hw.dto.BookDto;
 import org.dgp.hw.dto.BookUpdateDto;
-import org.dgp.hw.exceptions.NotFoundException;
 import org.dgp.hw.mappers.BookMapper;
 import org.dgp.hw.services.AuthorService;
 import org.dgp.hw.services.BookService;
@@ -64,7 +62,7 @@ public class BookController {
     }
 
     @PutMapping("/edit")
-    public String editBook( @Valid BookUpdateDto book) {
+    public String editBook(@Valid BookUpdateDto book) {
 
         bookService.update(book);
 
