@@ -1,15 +1,11 @@
 package org.dgp.hw.controllers;
 
-import org.dgp.hw.dto.AuthorDto;
-import org.dgp.hw.dto.BookDto;
-import org.dgp.hw.dto.BookUpdateDto;
-import org.dgp.hw.dto.GenreDto;
+import org.dgp.hw.dto.*;
 import org.dgp.hw.mappers.BookMapper;
 import org.dgp.hw.services.AuthorService;
 import org.dgp.hw.services.BookService;
 import org.dgp.hw.services.GenreService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -17,8 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -42,9 +37,9 @@ public class BookControllerTest {
     private BookMapper bookMapper;
 
     @Test
-    void getListTest() throws Exception {
+    void shouldReturnListListOfBooks() throws Exception {
         var books = getBooks();
-        Mockito.when(bookService.findAll()).thenReturn(books);
+        when(bookService.findAll()).thenReturn(books);
 
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
@@ -53,22 +48,22 @@ public class BookControllerTest {
     }
 
     @Test
-    void editPageTest() throws Exception {
+    void shouldReturnEditPage() throws Exception {
         var books = getBooks();
         var book = books.stream().filter(b -> b.getId() == 1).findAny();
-        Mockito.when(bookService.findById(1)).thenReturn(book);
+        when(bookService.findById(1)).thenReturn(book.get());
         var bookUpdateDto = new BookUpdateDto(book.get().getId(),
                 book.get().getTitle(),
                 book.get().getAuthor(),
                 book.get().getGenre());
-        Mockito.when(bookMapper.toDto(book.get()))
+        when(bookMapper.toDto(book.get()))
                 .thenReturn(bookUpdateDto);
 
         var authors = getAuthors();
         var genres = getGenres();
 
-        Mockito.when(authorService.findAll()).thenReturn(authors);
-        Mockito.when(genreService.findAll()).thenReturn(genres);
+        when(authorService.findAll()).thenReturn(authors);
+        when(genreService.findAll()).thenReturn(genres);
 
         mockMvc.perform(get("/edit?id=1"))
                 .andExpect(status().isOk())
@@ -79,12 +74,12 @@ public class BookControllerTest {
     }
 
     @Test
-    void createPageTest() throws Exception {
+    void shouldReturnCreatePage() throws Exception {
         var authors = getAuthors();
         var genres = getGenres();
 
-        Mockito.when(authorService.findAll()).thenReturn(authors);
-        Mockito.when(genreService.findAll()).thenReturn(genres);
+        when(authorService.findAll()).thenReturn(authors);
+        when(genreService.findAll()).thenReturn(genres);
 
         mockMvc.perform(get("/create"))
                 .andExpect(status().isOk())
@@ -95,10 +90,8 @@ public class BookControllerTest {
     }
 
     @Test
-    void saveBookInCaseOfCreate() throws Exception {
+    void shouldSaveNewBook() throws Exception {
         var bookServiceInOrder = inOrder(bookService);
-
-
 
         var genre = getGenres().get(0);
         var author = getAuthors().get(0);
@@ -108,30 +101,44 @@ public class BookControllerTest {
                         .contentType("application/x-www-form-urlencoded"))
                 .andExpect(status().is(302));
 
+        var authorDto = AuthorDto.builder()
+                .id(author.getId()).build();
+        var genreDto = GenreDto.builder()
+                .id(genre.getId()).build();
+
+        var bookDto = new BookCreateDto(null, "The Best Book", authorDto, genreDto);
+
         bookServiceInOrder
                 .verify(bookService, times(1))
-                .create("The Best Book", author.getId(), genre.getId());
+                .create(bookDto);
     }
 
     @Test
-    void saveBookInCaseOfEdit() throws Exception {
+    void shouldSaveBookWhenEditIt() throws Exception {
         var bookServiceInOrder = inOrder(bookService);
 
         var genre = getGenres().stream().filter(g -> g.getId() == 2).findAny().get();
         var author = getAuthors().stream().filter(a -> a.getId() == 2).findAny().get();
 
-        mockMvc.perform(put("/edit?id=1")
+        mockMvc.perform(put("/edit").param("id", "1")
                         .content("title=The Best Book&author.id=2&genre.id=2")
                         .contentType("application/x-www-form-urlencoded"))
                 .andExpect(status().is(302));
 
+        var authorDto = AuthorDto.builder()
+                .id(author.getId()).build();
+        var genreDto = GenreDto.builder()
+                .id(genre.getId()).build();
+
+        var bookDto = new BookUpdateDto(1L, "The Best Book", authorDto, genreDto);
+
         bookServiceInOrder
                 .verify(bookService, times(1))
-                .update(1,"The Best Book", author.getId(), genre.getId());
+                .update(bookDto);
     }
 
     @Test
-    void deleteBook() throws Exception {
+    void shouldDeleteBook() throws Exception {
         var bookServiceInOrder = inOrder(bookService);
 
         mockMvc.perform(post("/delete?id=1"))

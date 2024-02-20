@@ -1,7 +1,9 @@
 package org.dgp.hw.services;
 
 import lombok.RequiredArgsConstructor;
+import org.dgp.hw.dto.BookCreateDto;
 import org.dgp.hw.dto.BookDto;
+import org.dgp.hw.dto.BookUpdateDto;
 import org.dgp.hw.exceptions.NotFoundException;
 import org.dgp.hw.mappers.BookMapper;
 import org.dgp.hw.models.Book;
@@ -27,11 +29,12 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<BookDto> findById(long id) {
+    public BookDto findById(long id) {
 
         var book = bookRepository.findById(id);
 
-        return book.map(bookMapper::toDto);
+        return book.map(bookMapper::toDto).orElseThrow(() ->
+                new NotFoundException("Book with id = %s is not found".formatted(id)));
     }
 
     @Override
@@ -42,13 +45,13 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public BookDto create(String title, long authorId, long genreId) {
-        var author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new NotFoundException("Author with id %d not found".formatted(authorId)));
-        var genre = genreRepository.findById(genreId)
-                .orElseThrow(() -> new NotFoundException("Genre with id %d not found".formatted(genreId)));
+    public BookDto create(BookCreateDto bookDto) {
+        var author = authorRepository.findById(bookDto.getAuthor().getId())
+                .orElseThrow(() -> new NotFoundException("Author with id %d not found".formatted(bookDto.getAuthor().getId())));
+        var genre = genreRepository.findById(bookDto.getGenre().getId())
+                .orElseThrow(() -> new NotFoundException("Genre with id %d not found".formatted(bookDto.getGenre().getId())));
 
-        var book = new Book(0, title, author, genre);
+        var book = new Book(0, bookDto.getTitle(), author, genre);
 
         var savedBook = bookRepository.save(book);
 
@@ -57,16 +60,16 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public BookDto update(long id, String title, long authorId, long genreId) {
+    public BookDto update(BookUpdateDto bookDto) {
 
-        var bookToUpdate = bookRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Book with id=%d not found".formatted(id)));
-        var author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new NotFoundException("Author with id %d not found".formatted(authorId)));
-        var genre = genreRepository.findById(genreId)
-                .orElseThrow(() -> new NotFoundException("Genre with id %d not found".formatted(genreId)));
+        var bookToUpdate = bookRepository.findById(bookDto.getId())
+                .orElseThrow(() -> new NotFoundException("Book with id=%d not found".formatted(bookDto.getId())));
+        var author = authorRepository.findById(bookDto.getAuthor().getId())
+                .orElseThrow(() -> new NotFoundException("Author with id %d not found".formatted(bookDto.getAuthor().getId())));
+        var genre = genreRepository.findById(bookDto.getGenre().getId())
+                .orElseThrow(() -> new NotFoundException("Genre with id %d not found".formatted(bookDto.getGenre().getId())));
 
-        bookToUpdate.setTitle(title);
+        bookToUpdate.setTitle(bookDto.getTitle());
         bookToUpdate.setAuthor(author);
         bookToUpdate.setGenre(genre);
 

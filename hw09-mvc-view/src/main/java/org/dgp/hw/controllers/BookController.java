@@ -39,8 +39,7 @@ public class BookController {
 
     @GetMapping("/edit")
     public String editPage(@RequestParam("id") long id, Model model) {
-        var book = bookService.findById(id).orElseThrow(() ->
-                new NotFoundException("Book with id = %s is not found".formatted(id)));
+        var book = bookService.findById(id);
         var authors = authorService.findAll();
         var genres = genreService.findAll();
 
@@ -67,7 +66,7 @@ public class BookController {
     @PutMapping("/edit")
     public String editBook( @Valid BookUpdateDto book) {
 
-        bookService.update(book.getId(), book.getTitle(), book.getAuthor().getId(), book.getGenre().getId());
+        bookService.update(book);
 
         return "redirect:/";
     }
@@ -75,7 +74,7 @@ public class BookController {
     @PostMapping("/create")
     public String createBook(@Valid BookCreateDto book) {
 
-        bookService.create(book.getTitle(), book.getAuthor().getId(), book.getGenre().getId());
+        bookService.create(book);
 
         return "redirect:/";
     }

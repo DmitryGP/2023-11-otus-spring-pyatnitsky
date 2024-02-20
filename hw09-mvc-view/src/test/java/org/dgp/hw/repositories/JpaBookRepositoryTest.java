@@ -11,6 +11,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -18,6 +19,7 @@ import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayName("Репозиторий на основе Jdbc для работы с книгами ")
 @DataJpaTest
@@ -69,6 +71,37 @@ class JpaBookRepositoryTest {
 
         assertThat(em.find(Book.class, returnedBook.getId()))
                 .isEqualTo(returnedBook);
+    }
+
+    @DisplayName("должен падать если название пустое при создании книги")
+    @Test
+    void shouldFailWhenInsertBookWithEmptyTitle() {
+        var author = em.find(Author.class, 1);
+        var genre = em.find(Genre.class, 1);
+
+        var bookToSave = new Book(0, null, author, genre);
+
+        assertThatThrownBy(() -> repository.save(bookToSave)).isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    @DisplayName("должен падать если автор пуст при создании книги")
+    @Test
+    void shouldFailWhenInsertBookWithEmptyAuthor() {
+        var genre = em.find(Genre.class, 1);
+
+        var bookToSave = new Book(0, "Book Book", null, genre);
+
+        assertThatThrownBy(() -> repository.save(bookToSave)).isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    @DisplayName("должен падать если жанр пуст при создании книги")
+    @Test
+    void shouldFailWhenInsertBookWithEmptyGenre() {
+        var author = em.find(Author.class, 1);
+
+        var bookToSave = new Book(0, "Book Book", author, null);
+
+        assertThatThrownBy(() -> repository.save(bookToSave)).isInstanceOf(DataIntegrityViolationException.class);
     }
 
     @DisplayName("должен сохранять измененную книгу")
