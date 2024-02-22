@@ -24,6 +24,25 @@
         }
     </style>
     <script src="/webjars/jquery/3.6.4/jquery.min.js"></script>
+    <script>
+    function getBook() {
+            const bookContainer = document.getElementById("book-json")
+            const bookIdInput = document.getElementById("book-id-input")
+            const bookId = bookIdInput.value
+            fetch('api/v1/books/' + bookId)
+            .then(rawResponse => {
+                 if (!rawResponse.ok) {
+                    throw new Error('Response was not ok');
+                }
+                return rawResponse.json()
+            })
+            .then(json => bookContainer.innerHTML = JSON.stringify(json, null, 4))
+            .catch(error => {
+                bookContainer.innerHTML = ''
+                alert(error)
+            })
+        }
+</script>
 </head>
 <body>
 <h1>Books:</h1>
@@ -40,6 +59,14 @@
     <tbody>
     </tbody>
 </table>
+
+<h2>Get Book:</h2>
+<div class="row">
+    <label for="book-id-input">Id:</label>
+    <input id="book-id-input" name="id" type="number" value="1"/>
+    <button type="button" onclick="getBook()" >Get</button>
+</div>
+<pre id = "book-json"></pre>
 
 <script>
     $(function () {

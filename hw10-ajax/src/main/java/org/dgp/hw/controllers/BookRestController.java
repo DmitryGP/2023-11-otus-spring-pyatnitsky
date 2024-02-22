@@ -5,7 +5,7 @@ import org.dgp.hw.dto.BookDto;
 import org.dgp.hw.exceptions.NotFoundException;
 import org.dgp.hw.services.BookService;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class BookRestController {
     }
 
     @GetMapping("/api/v1/books/{id}")
-    public BookDto getBook(@RequestParam long id) {
+    public BookDto getBook(@PathVariable long id) {
         return bookService.findById(id).orElseThrow(
                 () -> new NotFoundException("No book with id = %s".formatted(id)));
     }

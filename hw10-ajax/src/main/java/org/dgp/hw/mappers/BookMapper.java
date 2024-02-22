@@ -1,7 +1,7 @@
 package org.dgp.hw.mappers;
 
 import lombok.AllArgsConstructor;
-import org.dgp.hw.dto.*;
+import org.dgp.hw.dto.BookDto;
 import org.dgp.hw.models.Book;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 public class BookMapper {
 
     private final AuthorMapper authorMapper;
+
     private final GenreMapper genreMapper;
 
     public BookDto toDto(Book book) {

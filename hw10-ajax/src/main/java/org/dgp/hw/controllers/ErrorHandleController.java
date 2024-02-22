@@ -1,26 +1,21 @@
 package org.dgp.hw.controllers;
 
 import org.dgp.hw.exceptions.NotFoundException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.ModelAndView;
 
-//@ControllerAdvice
+@ControllerAdvice
 public class ErrorHandleController {
 
     @ExceptionHandler(NotFoundException.class)
-    public ModelAndView handleNotFoundException(NotFoundException exc) {
-        var modelAndView = new ModelAndView("err404");
-        modelAndView.addObject("message", exc.getMessage());
-
-        return modelAndView;
+    public ResponseEntity<Exception> handleNotFoundException(NotFoundException exc) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exc);
     }
 
     @ExceptionHandler(Exception.class)
-    public ModelAndView handleException(NotFoundException exc) {
-        var modelAndView = new ModelAndView("err500");
-        modelAndView.addObject("message", exc.getMessage());
-
-        return modelAndView;
+    public ResponseEntity<String> handleException(NotFoundException exc) {
+        return ResponseEntity.internalServerError().body(exc.getMessage());
     }
 }
