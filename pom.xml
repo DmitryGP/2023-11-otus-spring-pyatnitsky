@@ -25,6 +25,7 @@
         <module>hw05-jdbc</module>
         <module>hw06-jpql</module>
         <module>hw07-spring-data</module>
+        <module>hw09-mvc-view</module>
     </modules>
 
     <properties>
