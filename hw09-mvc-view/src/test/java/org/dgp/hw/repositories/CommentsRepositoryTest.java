@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Репозиторий на основе Jpa для работы с комментариями ")
 @DataJpaTest
-public class JpaCommentsRepositoryTest {
+public class CommentsRepositoryTest {
 
     @Autowired
     private CommentRepository repository;

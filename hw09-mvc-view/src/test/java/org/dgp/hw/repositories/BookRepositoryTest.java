@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayName("Репозиторий на основе Jdbc для работы с книгами ")
 @DataJpaTest
-class JpaBookRepositoryTest {
+class BookRepositoryTest {
 
     @Autowired
     private BookRepository repository;

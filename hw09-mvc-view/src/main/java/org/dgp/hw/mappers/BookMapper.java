@@ -6,7 +6,9 @@ import org.dgp.hw.dto.BookCreateDto;
 import org.dgp.hw.dto.BookDto;
 import org.dgp.hw.dto.BookUpdateDto;
 import org.dgp.hw.dto.GenreDto;
+import org.dgp.hw.models.Author;
 import org.dgp.hw.models.Book;
+import org.dgp.hw.models.Genre;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -17,20 +19,6 @@ public class BookMapper {
 
     private final GenreMapper genreMapper;
 
-    public BookCreateDto toCreateDto(Book book) {
-        return new BookCreateDto(book.getId(),
-                book.getTitle(),
-                authorMapper.toDto(book.getAuthor()),
-                genreMapper.toDto(book.getGenre()));
-    }
-
-    public BookUpdateDto toUpdateDto(Book book) {
-        return new BookUpdateDto(book.getId(),
-                book.getTitle(),
-                authorMapper.toDto(book.getAuthor()),
-                genreMapper.toDto(book.getGenre()));
-    }
-
     public BookDto toDto(Book book) {
         return new BookDto(book.getId(),
                 book.getTitle(),
@@ -38,25 +26,18 @@ public class BookMapper {
                 genreMapper.toDto(book.getGenre()));
     }
 
-    public Book toModel(BookDto bookDto) {
-        return new Book(bookDto.getId(),
+    public Book toModel(BookCreateDto bookDto, Author author, Genre genre) {
+        return new Book(0,
                 bookDto.getTitle(),
-                authorMapper.toModel(bookDto.getAuthor()),
-                genreMapper.toModel(bookDto.getGenre()));
+                author,
+                genre);
     }
 
-    public Book toModel(BookCreateDto bookDto) {
+    public Book toModel(BookUpdateDto bookDto, Author author, Genre genre) {
         return new Book(bookDto.getId(),
                 bookDto.getTitle(),
-                authorMapper.toModel(bookDto.getAuthor()),
-                genreMapper.toModel(bookDto.getGenre()));
-    }
-
-    public Book toModel(BookUpdateDto bookDto) {
-        return new Book(bookDto.getId(),
-                bookDto.getTitle(),
-                authorMapper.toModel(bookDto.getAuthor()),
-                genreMapper.toModel(bookDto.getGenre()));
+                author,
+                genre);
     }
 
     public BookUpdateDto toDto(BookDto bookDto) {

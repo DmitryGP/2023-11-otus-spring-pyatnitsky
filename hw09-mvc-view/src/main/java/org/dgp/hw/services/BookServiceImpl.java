@@ -6,7 +6,6 @@ import org.dgp.hw.dto.BookDto;
 import org.dgp.hw.dto.BookUpdateDto;
 import org.dgp.hw.exceptions.NotFoundException;
 import org.dgp.hw.mappers.BookMapper;
-import org.dgp.hw.models.Book;
 import org.dgp.hw.repositories.AuthorRepository;
 import org.dgp.hw.repositories.BookRepository;
 import org.dgp.hw.repositories.GenreRepository;
@@ -52,7 +51,7 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(() -> new NotFoundException("Genre with id %d not found"
                         .formatted(bookDto.getGenre().getId())));
 
-        var book = new Book(0, bookDto.getTitle(), author, genre);
+        var book = bookMapper.toModel(bookDto, author, genre);
 
         var savedBook = bookRepository.save(book);
 
@@ -63,8 +62,6 @@ public class BookServiceImpl implements BookService {
     @Transactional
     public BookDto update(BookUpdateDto bookDto) {
 
-        var bookToUpdate = bookRepository.findById(bookDto.getId())
-                .orElseThrow(() -> new NotFoundException("Book with id=%d not found".formatted(bookDto.getId())));
         var author = authorRepository.findById(bookDto.getAuthor().getId())
                 .orElseThrow(() -> new NotFoundException("Author with id %d not found"
                         .formatted(bookDto.getAuthor().getId())));
@@ -72,9 +69,7 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(() -> new NotFoundException("Genre with id %d not found"
                         .formatted(bookDto.getGenre().getId())));
 
-        bookToUpdate.setTitle(bookDto.getTitle());
-        bookToUpdate.setAuthor(author);
-        bookToUpdate.setGenre(genre);
+        var bookToUpdate = bookMapper.toModel(bookDto, author, genre);
 
         var savedBook = bookRepository.save(bookToUpdate);
 

@@ -37,7 +37,7 @@ public class BookControllerTest {
     private BookMapper bookMapper;
 
     @Test
-    void shouldReturnListListOfBooks() throws Exception {
+    void shouldReturnListOfBooks() throws Exception {
         var books = getBooks();
         when(bookService.findAll()).thenReturn(books);
 
@@ -106,7 +106,7 @@ public class BookControllerTest {
         var genreDto = GenreDto.builder()
                 .id(genre.getId()).build();
 
-        var bookDto = new BookCreateDto(null, "The Best Book", authorDto, genreDto);
+        var bookDto = new BookCreateDto("The Best Book", authorDto, genreDto);
 
         bookServiceInOrder
                 .verify(bookService, times(1))
