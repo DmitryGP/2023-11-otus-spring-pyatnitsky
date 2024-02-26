@@ -26,6 +26,7 @@
         <module>hw06-jpql</module>
         <module>hw07-spring-data</module>
         <module>hw09-mvc-view</module>
+        <module>hw11-web-flux</module>
     </modules>
 
     <properties>
