@@ -3,6 +3,7 @@ package org.dgp.hw.controllers;
 import org.dgp.hw.dto.AuthorDto;
 import org.dgp.hw.dto.BookDto;
 import org.dgp.hw.dto.GenreDto;
+import org.dgp.hw.exceptions.NotFoundException;
 import org.dgp.hw.services.BookService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class BookRestControllerTest {
     void shouldReturnRequestedBook() throws Exception {
 
         var books = getBooks();
-        when(bookService.findById(2)).thenReturn(books.stream().filter(b -> b.getId() == 2).findFirst());
+        when(bookService.findById(2)).thenReturn(books.stream().filter(b -> b.getId() == 2).findFirst().get());
 
         mockMvc.perform(get("/api/v1/books/2"))
                 .andExpect(status().isOk())
@@ -54,9 +55,21 @@ public class BookRestControllerTest {
     }
 
     @Test
-    void shouldFailWhenRequestWrongBookId() throws Exception {
+    void shouldFailWithNotFoundException() throws Exception {
+
+        when(bookService.findById(4)).thenThrow(NotFoundException.class);
+
         mockMvc.perform(get("/api/v1/books/4"))
                 .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void shouldFailWithServerInternalException() throws Exception {
+
+        when(bookService.findById(4)).thenThrow(RuntimeException.class);
+
+        mockMvc.perform(get("/api/v1/books/4"))
+                .andExpect(status().is5xxServerError());
     }
 
     private static List<BookDto> getBooks() {

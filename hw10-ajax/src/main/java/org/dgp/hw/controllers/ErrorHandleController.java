@@ -1,21 +1,28 @@
 package org.dgp.hw.controllers;
 
 import org.dgp.hw.exceptions.NotFoundException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.dgp.hw.models.Error;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
+@RestControllerAdvice
 public class ErrorHandleController {
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<Exception> handleNotFoundException(NotFoundException exc) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exc);
+    @ResponseStatus(NOT_FOUND)
+    public Error handleNotFoundException(NotFoundException exc) {
+        var error = new Error(exc.getMessage());
+        return error;
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(NotFoundException exc) {
-        return ResponseEntity.internalServerError().body(exc.getMessage());
+    @ResponseStatus(INTERNAL_SERVER_ERROR)
+    public Error handleException(Exception exc) {
+        var error = new Error(exc.getMessage());
+        return error;
     }
 }

@@ -4,22 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.dgp.hw.dto.BookDto;
 import org.dgp.hw.exceptions.NotFoundException;
 import org.dgp.hw.mappers.BookMapper;
-import org.dgp.hw.models.Book;
-import org.dgp.hw.repositories.AuthorRepository;
 import org.dgp.hw.repositories.BookRepository;
-import org.dgp.hw.repositories.GenreRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
 public class BookServiceImpl implements BookService {
-    private final AuthorRepository authorRepository;
-
-    private final GenreRepository genreRepository;
 
     private final BookRepository bookRepository;
 
@@ -27,57 +20,17 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<BookDto> findById(long id) {
+    public BookDto findById(long id) {
 
         var book = bookRepository.findById(id);
 
-        return book.map(bookMapper::toDto);
+        return book.map(bookMapper::toDto)
+                .orElseThrow(() -> new NotFoundException("No book with id = %s".formatted(id)));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<BookDto> findAll() {
         return bookRepository.findAll().stream().map(bookMapper::toDto).toList();
-    }
-
-    @Override
-    @Transactional
-    public BookDto create(String title, long authorId, long genreId) {
-        var author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new NotFoundException("Author with id %d not found".formatted(authorId)));
-        var genre = genreRepository.findById(genreId)
-                .orElseThrow(() -> new NotFoundException("Genre with id %d not found".formatted(genreId)));
-
-        var book = new Book(0, title, author, genre);
-
-        var savedBook = bookRepository.save(book);
-
-        return bookMapper.toDto(savedBook);
-    }
-
-    @Override
-    @Transactional
-    public BookDto update(long id, String title, long authorId, long genreId) {
-
-        var bookToUpdate = bookRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Book with id=%d not found".formatted(id)));
-        var author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new NotFoundException("Author with id %d not found".formatted(authorId)));
-        var genre = genreRepository.findById(genreId)
-                .orElseThrow(() -> new NotFoundException("Genre with id %d not found".formatted(genreId)));
-
-        bookToUpdate.setTitle(title);
-        bookToUpdate.setAuthor(author);
-        bookToUpdate.setGenre(genre);
-
-        var savedBook = bookRepository.save(bookToUpdate);
-
-        return bookMapper.toDto(savedBook);
-    }
-
-    @Override
-    @Transactional
-    public void deleteById(long id) {
-        bookRepository.deleteById(id);
     }
 }
