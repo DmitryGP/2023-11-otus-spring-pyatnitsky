@@ -1,11 +1,10 @@
 package org.dgp.hw.repositories;
 
 import org.dgp.hw.models.Genre;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import reactor.core.publisher.Mono;
 
-import java.util.Optional;
+public interface GenreRepository extends ReactiveCrudRepository<Genre, Long> {
 
-public interface GenreRepository extends JpaRepository<Genre, Long> {
-
-    Optional<Genre> findById(long id);
+    Mono<Genre> findById(long id);
 }

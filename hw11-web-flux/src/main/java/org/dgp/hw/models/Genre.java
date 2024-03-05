@@ -1,25 +1,22 @@
 package org.dgp.hw.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.PersistenceCreator;
+import org.springframework.data.relational.core.mapping.Table;
 
 @Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
 @Table(name = "genres")
 public class Genre {
 
     @Id
-    private long id;
+    private final long id;
 
-    @Column(name = "name")
-    private String name;
+    private final String name;
+
+    @PersistenceCreator
+    public Genre(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

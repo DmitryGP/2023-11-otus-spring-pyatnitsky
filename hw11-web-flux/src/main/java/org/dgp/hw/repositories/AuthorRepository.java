@@ -1,11 +1,10 @@
 package org.dgp.hw.repositories;
 
 import org.dgp.hw.models.Author;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import reactor.core.publisher.Mono;
 
-import java.util.Optional;
+public interface AuthorRepository extends ReactiveCrudRepository<Author, Long> {
 
-public interface AuthorRepository extends JpaRepository<Author, Long> {
-
-    Optional<Author> findById(long id);
+    Mono<Author> findById(long id);
 }
