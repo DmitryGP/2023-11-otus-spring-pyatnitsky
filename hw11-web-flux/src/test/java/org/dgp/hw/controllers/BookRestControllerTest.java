@@ -1,8 +1,15 @@
 package org.dgp.hw.controllers;
 
 import org.dgp.hw.dto.BookDto;
+import org.dgp.hw.repositories.BookRepositoryCustom;
 import org.dgp.hw.services.BookService;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.r2dbc.R2dbcDataAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.r2dbc.R2dbcRepositoriesAutoConfiguration;
+import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -18,10 +25,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@EnableAutoConfiguration(
+        exclude = {R2dbcAutoConfiguration.class,
+                    FlywayAutoConfiguration.class,
+                    DataSourceAutoConfiguration.class})
 public class BookRestControllerTest {
 
     @MockBean
     private BookService bookService;
+
+    @MockBean
+    private BookRepositoryCustom bookRepositoryCustom;
 
     @LocalServerPort
     private int port;
