@@ -30,7 +30,6 @@ public class SecurityConfiguration {
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authorizeHttpRequests((authorize) -> authorize
                         .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults())
                 .authenticationProvider(authenticationProvider)
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll);
 

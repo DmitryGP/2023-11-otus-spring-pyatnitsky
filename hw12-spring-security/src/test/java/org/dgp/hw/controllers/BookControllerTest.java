@@ -31,6 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BookController.class)
@@ -189,7 +190,8 @@ public class BookControllerTest {
 
         mockMvc.perform(get("/edit?id=1")
                         .with(csrf()))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("http://localhost/login"));
     }
     @Test
     @WithAnonymousUser
@@ -199,7 +201,8 @@ public class BookControllerTest {
 
         mockMvc.perform(get("/")
                         .with(csrf()))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("http://localhost/login"));
     }
 
     @Test
@@ -213,7 +216,8 @@ public class BookControllerTest {
 
         mockMvc.perform(get("/create")
                         .with(csrf()))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("http://localhost/login"));
     }
 
     @Test
@@ -224,7 +228,8 @@ public class BookControllerTest {
                         .with(csrf())
                         .content("title=The Best Book&author.id=1&genre.id=1")
                         .contentType("application/x-www-form-urlencoded"))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("http://localhost/login"));
     }
 
     @Test
@@ -235,7 +240,8 @@ public class BookControllerTest {
                         .param("id", "1")
                         .content("title=The Best Book&author.id=2&genre.id=2")
                         .contentType("application/x-www-form-urlencoded"))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("http://localhost/login"));
     }
 
 
@@ -258,7 +264,8 @@ public class BookControllerTest {
     void deleteBookShouldReturn4xxWhenAnonymousUser() throws Exception {
         mockMvc.perform(post("/delete?id=1")
                         .with(csrf()))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("http://localhost/login"));
     }
 
     private List<GenreDto> getGenres() {
