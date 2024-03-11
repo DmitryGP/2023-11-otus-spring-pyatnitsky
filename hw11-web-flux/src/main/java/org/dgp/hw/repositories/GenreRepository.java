@@ -6,5 +6,4 @@ import reactor.core.publisher.Mono;
 
 public interface GenreRepository extends ReactiveCrudRepository<Genre, Long> {
 
-    Mono<Genre> findById(long id);
 }

@@ -42,7 +42,8 @@ public class BookServiceImpl implements BookService {
         return book;
     }
 
+    @Override
     public Flux<BookDto> findAll() {
-        return bookRepositoryCustom.findAll();
+        return bookRepository.getBooks();
     }
 }
