@@ -6,8 +6,8 @@ import org.dgp.hw.dto.BookDto;
 import org.dgp.hw.dto.BookUpdateDto;
 import org.dgp.hw.dto.GenreDto;
 import org.dgp.hw.mappers.BookMapper;
-import org.dgp.hw.security.repositories.UserRepository;
 import org.dgp.hw.security.configuration.SecurityConfiguration;
+import org.dgp.hw.security.repositories.UserRepository;
 import org.dgp.hw.services.AuthorService;
 import org.dgp.hw.services.BookService;
 import org.dgp.hw.services.GenreService;
@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,7 +27,6 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -55,6 +55,9 @@ public class BookControllerTest {
 
     @MockBean
     private UserRepository userRepository;
+
+    @MockBean
+    private UserDetailsService userDetailsService;
 
 
     @Test

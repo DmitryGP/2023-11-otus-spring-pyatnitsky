@@ -11,7 +11,8 @@ insert into comments(text, book_id)
 values ('Comment_1', 1), ('Comment_2', 1), ('Comment_3', 2), ('Comment_4', 3), ('Comment_5', 3);
 
 insert into users(username, password)
-values ('user1', 'password1'), ('user2', 'password2');
+values ('user1', '$2a$10$f.aAUho6ptyHCsXcH.8MSe/dO6hipk/Eq2OwVRNEtJtzhvLSRhTn2'),
+('user2', '$2a$10$NtJcT7983wJUEQiglsZEy.nHPpjmlxVSERdhfByaXaPvT06C9QsT6');
 
 insert into roles(name)
 values ('USER');
