@@ -1,49 +1,47 @@
 package org.dgp.hw.controllers;
 
+import org.dgp.hw.dto.BookCreateDto;
 import org.dgp.hw.dto.BookDto;
-import org.dgp.hw.repositories.BookRepositoryCustom;
+import org.dgp.hw.dto.BookUpdateDto;
 import org.dgp.hw.services.BookService;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.r2dbc.R2dbcDataAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.r2dbc.R2dbcRepositoriesAutoConfiguration;
-import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.time.Duration;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@EnableAutoConfiguration(
-        exclude = {R2dbcAutoConfiguration.class,
-                    FlywayAutoConfiguration.class,
-                    DataSourceAutoConfiguration.class})
+@WebFluxTest(controllers = BookRestController.class)
 public class BookRestControllerTest {
 
     @MockBean
     private BookService bookService;
 
-    @MockBean
-    private BookRepositoryCustom bookRepositoryCustom;
+    @Autowired
+    private WebTestClient client;
 
-    @LocalServerPort
-    private int port;
+    @Captor
+    private ArgumentCaptor<BookUpdateDto> bookUpdateDtoArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<BookCreateDto> bookCreateDtoArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Long> bookIdArgumentCaptor;
 
     @Test
     void shouldReturnAllBooks() {
 
-        var client = WebClient.create(String.format("http://localhost:%d", port));
         var expectedBookCount = 2;
 
         var books = getBooks();
@@ -52,20 +50,15 @@ public class BookRestControllerTest {
         var result = client.get()
                 .uri("/api/v1/books")
                 .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToFlux(BookDto.class)
-                .take(expectedBookCount)
-                .timeout(Duration.ofSeconds(3))
-                .collectList()
-                .block();
+                .exchange()
+                        .expectStatus().isOk()
+                        .expectBodyList(BookDto.class);
 
-        assertEquals(expectedBookCount, result.size());
+        assertEquals(expectedBookCount, result.returnResult().getResponseBody().size());
     }
 
     @Test
     void shouldReturnRequestedBook() {
-
-        var client = WebClient.create(String.format("http://localhost:%d", port));
 
         var books = getBooks();
         when(bookService.findById(2)).thenReturn(
@@ -76,17 +69,80 @@ public class BookRestControllerTest {
 
         var result = client.get().uri("/api/v1/books/2")
                 .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(BookDto.class)
-                .timeout(Duration.ofSeconds(3))
-                .block();
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(BookDto.class);
 
+        var actualBook = result.returnResult().getResponseBody();
 
-        assertEquals(2, result.getId());
-        assertEquals("Book2", result.getTitle());
-        assertEquals("Author2", result.getAuthor());
-        assertEquals("Genre2", result.getGenre());
+        assertEquals(2, actualBook.getId());
+        assertEquals("Book2", actualBook.getTitle());
+        assertEquals("Author2", actualBook.getAuthor());
+        assertEquals("Genre2", actualBook.getGenre());
 
+    }
+
+    @Test
+    void shouldReturnNotFoundStatusIfBookIsNotFound() {
+        when(bookService.findById(5)).thenReturn(
+                Mono.empty());
+
+        client.get().uri("/api/v1/books/5")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
+    void shouldCreateBook() {
+        var bookToCreate = new BookCreateDto("book", 1L, 1L);
+
+        client.post().uri("/api/v1/books")
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue(bookToCreate)
+                .exchange()
+                .expectStatus().isOk();
+
+        verify(bookService).create(bookCreateDtoArgumentCaptor.capture());
+
+        var actualBook = bookCreateDtoArgumentCaptor.getValue();
+
+        assertEquals("book", actualBook.getTitle());
+        assertEquals(1, actualBook.getAuthorId());
+        assertEquals(1, actualBook.getGenreId());
+    }
+
+    @Test
+    void shouldUpdateBook() {
+        var bookToUpdate = new BookUpdateDto(1L, "book");
+
+        client.put().uri("/api/v1/books")
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue(bookToUpdate)
+                .exchange()
+                .expectStatus().isOk();
+
+        verify(bookService).update(bookUpdateDtoArgumentCaptor.capture());
+
+        var actualBook = bookUpdateDtoArgumentCaptor.getValue();
+
+        assertEquals(1, actualBook.getId());
+        assertEquals("book", actualBook.getTitle());
+
+    }
+
+    @Test
+    void shouldDeleteBook() {
+        client.delete().uri("/api/v1/books/1")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk();
+
+        verify(bookService).delete(bookIdArgumentCaptor.capture());
+
+        var actualId = bookIdArgumentCaptor.getValue();
+
+        assertEquals(1, actualId);
     }
 
     private static List<BookDto> getBooks() {

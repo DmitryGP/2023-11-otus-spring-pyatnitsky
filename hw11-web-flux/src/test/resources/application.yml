@@ -1,2 +1,5 @@
 flyway:
   enabled: false
+local:
+  server:
+    port: 8080
