@@ -4,12 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.dgp.hw.dto.BookCreateDto;
 import org.dgp.hw.dto.BookDto;
 import org.dgp.hw.dto.BookUpdateDto;
-import org.dgp.hw.exceptions.NotFoundException;
 import org.dgp.hw.mappers.BookMapper;
 import org.dgp.hw.models.Book;
 import org.dgp.hw.repositories.AuthorRepository;
 import org.dgp.hw.repositories.BookRepository;
 import org.dgp.hw.repositories.GenreRepository;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -30,17 +30,8 @@ public class BookServiceImpl implements BookService {
     @Override
     public Mono<BookDto> findById(long id) {
 
-        var book = bookRepository.findById(id)
-                .flatMap(b -> {
-                    var author = authorRepository.findById(b.getAuthorId());
-                    var genre = genreRepository.findById(b.getGenreId());
-
-                    var result = Mono.zip(author, genre);
-
-                    return result.map(t -> bookMapper.toDto(b, t.getT1(), t.getT2()));
-                });
-
-        return book;
+        return bookRepository.findById(id)
+                .flatMap(this::getMonoBookDto);
     }
 
     @Override
@@ -49,24 +40,34 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void update(BookUpdateDto bookDto) {
+    public Mono<BookDto> update(BookUpdateDto bookDto) {
 
-        var bookToSave = bookRepository.findById(bookDto.getId())
+        return bookRepository.findById(bookDto.getId())
                 .map(b -> new Book(b.getId(), bookDto.getTitle(), b.getAuthorId(), b.getGenreId()))
-                .blockOptional().orElseThrow(NotFoundException::new);
-
-        bookRepository.save(bookToSave);
+                .flatMap(bookRepository::save)
+                .flatMap(this::getMonoBookDto);
     }
 
     @Override
-    public void create(BookCreateDto bookDto) {
+    public Mono<BookDto> create(BookCreateDto bookDto) {
         var bookToSave = bookMapper.toModel(bookDto);
 
-        bookRepository.save(bookToSave);
+        return bookRepository.save(bookToSave).flatMap(this::getMonoBookDto);
+
     }
 
     @Override
-    public void delete(long id) {
-        bookRepository.deleteById(id);
+    public Mono<Void> delete(long id) {
+        return bookRepository.deleteById(id);
+    }
+
+    @NotNull
+    private Mono<BookDto> getMonoBookDto(Book b) {
+        var author = authorRepository.findById(b.getAuthorId());
+        var genre = genreRepository.findById(b.getGenreId());
+
+        var result = Mono.zip(author, genre);
+
+        return result.map(t -> bookMapper.toDto(b, t.getT1(), t.getT2()));
     }
 }

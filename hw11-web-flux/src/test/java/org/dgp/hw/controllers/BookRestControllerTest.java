@@ -97,6 +97,10 @@ public class BookRestControllerTest {
     void shouldCreateBook() {
         var bookToCreate = new BookCreateDto("book", 1L, 1L);
 
+        when(bookService.create(bookToCreate))
+                .thenReturn(Mono.just(
+                        new BookDto(1, "book", "author", "genre")));
+
         client.post().uri("/api/v1/books")
                 .accept(MediaType.APPLICATION_JSON)
                 .bodyValue(bookToCreate)
@@ -116,6 +120,10 @@ public class BookRestControllerTest {
     void shouldUpdateBook() {
         var bookToUpdate = new BookUpdateDto(1L, "book");
 
+        when(bookService.update(bookToUpdate))
+                .thenReturn(Mono.just(
+                        new BookDto(1, "book", "author", "genre")));
+
         client.put().uri("/api/v1/books")
                 .accept(MediaType.APPLICATION_JSON)
                 .bodyValue(bookToUpdate)
@@ -133,6 +141,10 @@ public class BookRestControllerTest {
 
     @Test
     void shouldDeleteBook() {
+
+        when(bookService.delete(1))
+                .thenReturn(Mono.empty());
+
         client.delete().uri("/api/v1/books/1")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()

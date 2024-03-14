@@ -36,18 +36,22 @@ public class BookRestController {
     }
 
     @PostMapping("/api/v1/books")
-    public void createBook(@RequestBody BookCreateDto bookDto) {
-        bookService.create(bookDto);
+    public
+    Mono<ResponseEntity<BookDto>> createBook(@RequestBody BookCreateDto bookDto) {
+        return bookService.create(bookDto)
+                .map(ResponseEntity::ok);
     }
 
     @PutMapping("/api/v1/books")
-    public void updateBook(@RequestBody BookUpdateDto bookDto) {
-        bookService.update(bookDto);
+    public Mono<ResponseEntity<BookDto>> updateBook(@RequestBody BookUpdateDto bookDto) {
+        return bookService.update(bookDto)
+                .map(ResponseEntity::ok);
     }
 
     @DeleteMapping("/api/v1/books/{id}")
-    public void deleteBook(@PathVariable long id) {
-        bookService.delete(id);
+    public Mono<ResponseEntity<Void>> deleteBook(@PathVariable long id) {
+        return bookService.delete(id)
+                .map(ResponseEntity::ok);
     }
 
 }
