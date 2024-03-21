@@ -28,6 +28,7 @@
         <module>hw10-ajax</module>
         <module>hw09-mvc-view</module>
         <module>hw12-spring-security</module>
+        <module>hw13-security-authorization</module>
     </modules>
 
     <properties>
