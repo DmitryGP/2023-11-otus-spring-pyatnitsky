@@ -19,9 +19,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @Slf4j
-@EnableGlobalMethodSecurity(
-        securedEnabled = true
-)
 public class SecurityConfiguration {
 
     @Bean

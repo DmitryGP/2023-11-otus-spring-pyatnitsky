@@ -6,6 +6,7 @@ import org.dgp.hw.dto.BookDto;
 import org.dgp.hw.dto.BookUpdateDto;
 import org.dgp.hw.dto.GenreDto;
 import org.dgp.hw.mappers.BookMapper;
+import org.dgp.hw.security.configuration.AclConfig;
 import org.dgp.hw.security.configuration.SecurityConfiguration;
 import org.dgp.hw.security.repositories.UserRepository;
 import org.dgp.hw.services.AuthorService;
