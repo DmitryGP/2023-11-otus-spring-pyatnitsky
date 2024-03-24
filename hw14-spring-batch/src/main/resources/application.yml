@@ -12,3 +12,21 @@ spring:
     hibernate:
       ddl-auto: none
       show-sql: false
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: BookMigration
+  batch:
+    job:
+      enabled: false
+  shell:
+    interactive:
+      enabled: true
+    noninteractive:
+      enabled: false
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 4.0.2
