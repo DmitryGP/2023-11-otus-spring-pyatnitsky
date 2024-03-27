@@ -18,6 +18,7 @@ public class CommentMapper {
                 .id(String.valueOf(comment.getId()))
                 .text(comment.getText())
                 .mongoId(mongoIdGenerator.generateId())
+                .bookId(comment.getBook().getId())
                 .build();
     }
 

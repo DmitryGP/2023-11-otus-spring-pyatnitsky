@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class BookMongo {
 
     @Id
-    private String Id;
+    private String id;
 
     private String title;
 

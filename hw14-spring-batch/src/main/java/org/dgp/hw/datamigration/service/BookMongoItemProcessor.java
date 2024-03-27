@@ -23,8 +23,8 @@ public class BookMongoItemProcessor implements ItemProcessor<BookTemp, BookMongo
     @Override
     public BookMongo process(BookTemp item) {
 
-        var findAuthor = new Query(Criteria.where("id").is(item.getAuthorId()));
-        var findGenre = new Query(Criteria.where("id").is(item.getGenreId()));
+        var findAuthor = new Query(Criteria.where("id").is(String.valueOf(item.getAuthorId())));
+        var findGenre = new Query(Criteria.where("id").is(String.valueOf(item.getGenreId())));
 
         var author = mongoOperations.findOne(findAuthor, AuthorTemp.class);
         var genre = mongoOperations.findOne(findGenre, GenreTemp.class);

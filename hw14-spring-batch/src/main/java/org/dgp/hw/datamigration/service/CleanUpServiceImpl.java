@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 public class CleanUpServiceImpl implements CleanUpService {
 
     private final MongoOperations mongoOperations;
+
     @Override
     public void cleanUp() {
         mongoOperations.dropCollection(AuthorTemp.class);

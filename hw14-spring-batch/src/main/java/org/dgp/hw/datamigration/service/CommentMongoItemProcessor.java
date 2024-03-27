@@ -22,10 +22,14 @@ public class CommentMongoItemProcessor implements ItemProcessor<CommentTemp, Com
     @Override
     public CommentMongo process(CommentTemp item) {
 
-        var findBook = new Query(Criteria.where("id").is(item.getBookId()));
+        String bookId = "";
 
-        var book = mongoOperations.findOne(findBook, BookTemp.class);
+        if (item.getBookId() != 0) {
+            var findBook = new Query(Criteria.where("id").is(String.valueOf(item.getBookId())));
+            var book = mongoOperations.findOne(findBook, BookTemp.class);
+            bookId = book.getMongoId();
+        }
 
-        return commentMapper.map(item, book.getMongoId());
+        return commentMapper.map(item, bookId);
     }
 }

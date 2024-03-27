@@ -13,14 +13,13 @@ public class AuthorMapper {
 
     private final MongoIdGenerator mongoIdGenerator;
 
-    public AuthorTemp map(Author author){
+    public AuthorTemp map(Author author) {
         return AuthorTemp.builder()
                 .mongoId(mongoIdGenerator.generateId())
                 .id(String.valueOf(author.getId()))
                 .fullName(author.getFullName())
                 .build();
     }
-
 
     public AuthorMongo map(AuthorTemp author) {
         return AuthorMongo.builder()
