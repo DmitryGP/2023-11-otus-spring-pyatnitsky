@@ -31,7 +31,7 @@ public class JpaCommentsRepositoryTest {
     @DisplayName("должен загружать комментарии по id книги")
     @ParameterizedTest
     @MethodSource("getBookIdCommentIds")
-    void shouldReturnCorrectCommentsByBookId(long bookId, List<Long> expectedCommentIds) {
+    void shouldReturnCorrectCommentsByBookId(String bookId, List<Long> expectedCommentIds) {
         var actualComments = repository.findByBookId(bookId);
         var expectedComments = getExpectedComments(expectedCommentIds);
         assertThat(actualComments).containsExactlyElementsOf(expectedComments);
@@ -40,7 +40,7 @@ public class JpaCommentsRepositoryTest {
     @DisplayName("должен загружать комментарии по id")
     @ParameterizedTest
     @MethodSource("getCommentIds")
-    void shouldReturnCorrectCommentById(long commentId) {
+    void shouldReturnCorrectCommentById(String commentId) {
         var actualComment = repository.findById(commentId);
         var expectedComment = em.find(Comment.class, commentId);
 
@@ -51,7 +51,7 @@ public class JpaCommentsRepositoryTest {
     @Test
     void shouldInsertNewComment() {
         var book = em.find(Book.class, 1);
-        var newComment = new Comment(0, "Some text", book);
+        var newComment = new Comment("", "Some text", book);
 
         var savedComment = repository.save(newComment);
 
@@ -65,7 +65,7 @@ public class JpaCommentsRepositoryTest {
     @Test
     void shouldUpdateComment() {
         var updatedText = "updated text";
-        var comment = repository.findById(1L).get();
+        var comment = repository.findById("").get();
 
         comment.setText(updatedText);
 
@@ -87,7 +87,7 @@ public class JpaCommentsRepositoryTest {
 
         var bookId = comment.getBook().getId();
 
-        repository.deleteById(1L);
+        repository.deleteById("1L");
 
         comment = em.find(Comment.class, 1);
 

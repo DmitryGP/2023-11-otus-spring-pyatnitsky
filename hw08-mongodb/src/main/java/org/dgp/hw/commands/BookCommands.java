@@ -24,7 +24,7 @@ public class BookCommands {
     }
 
     @ShellMethod(value = "Find book by id", key = "bbid")
-    public String findBookById(long id) {
+    public String findBookById(String id) {
         return bookService.findById(id)
                 .map(bookConverter::bookToString)
                 .orElse("Book with id %d not found".formatted(id));
@@ -32,21 +32,21 @@ public class BookCommands {
 
     // bins newBook 1 1
     @ShellMethod(value = "Insert book", key = "bins")
-    public String insertBook(String title, long authorId, long genreId) {
+    public String insertBook(String title, String authorId, String genreId) {
         var savedBook = bookService.create(title, authorId, genreId);
         return bookConverter.bookToString(savedBook);
     }
 
     // bupd 4 editedBook 3 2
     @ShellMethod(value = "Update book", key = "bupd")
-    public String updateBook(long id, String title, long authorId, long genreId) {
+    public String updateBook(String id, String title, String authorId, String genreId) {
         var savedBook = bookService.update(id, title, authorId, genreId);
         return bookConverter.bookToString(savedBook);
     }
 
     // bdel 4
     @ShellMethod(value = "Delete book by id", key = "bdel")
-    public void deleteBook(long id) {
+    public void deleteBook(String id) {
         bookService.deleteById(id);
     }
 }

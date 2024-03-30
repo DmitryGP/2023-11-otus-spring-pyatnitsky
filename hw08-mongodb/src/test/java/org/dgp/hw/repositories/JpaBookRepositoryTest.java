@@ -1,5 +1,6 @@
 package org.dgp.hw.repositories;
 
+import org.assertj.core.util.Strings;
 import org.dgp.hw.models.Author;
 import org.dgp.hw.models.Book;
 import org.dgp.hw.models.Genre;
@@ -36,7 +37,7 @@ class JpaBookRepositoryTest {
     @DisplayName("должен загружать книгу по id")
     @ParameterizedTest
     @MethodSource("getExpectedBooks")
-    void shouldReturnCorrectBookById(Long expectedBookId) {
+    void shouldReturnCorrectBookById(String expectedBookId) {
         var expectedBook = em.find(Book.class, expectedBookId);
         var actualBook = repository.findById(expectedBookId);
         assertThat(actualBook).isPresent()
@@ -63,7 +64,7 @@ class JpaBookRepositoryTest {
     void shouldSaveNewBook() {
         var author = em.find(Author.class, 1);
         var genre = em.find(Genre.class, 1);
-        var bookToSave = new Book(0, "BookTitle_10500", author, genre);
+        var bookToSave = new Book("", "BookTitle_10500", author, genre);
 
         var returnedBook = repository.save(bookToSave);
 
@@ -86,7 +87,7 @@ class JpaBookRepositoryTest {
         var returnedBook = repository.save(bookToSave);
 
         assertThat(returnedBook).isNotNull()
-                .matches(book -> book.getId() > 0)
+                .matches(book -> !Strings.isNullOrEmpty(book.getId()))
                 .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(bookToSave);
     }
 
@@ -94,7 +95,7 @@ class JpaBookRepositoryTest {
     @Test
     void shouldDeleteBook() {
         assertThat(em.find(Book.class, 1)).isNotNull();
-        repository.deleteById(1L);
+        repository.deleteById("");
         assertThat(em.find(Book.class, 1)).isNull();
     }
 }

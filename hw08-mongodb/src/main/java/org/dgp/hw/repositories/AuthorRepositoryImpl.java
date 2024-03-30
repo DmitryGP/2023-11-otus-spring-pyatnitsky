@@ -15,7 +15,7 @@ public class AuthorRepositoryImpl implements AuthorRepository {
 
     private final MongoTemplate mongoTemplate;
     @Override
-    public Optional<Author> findById(long id) {
+    public Optional<Author> findById(String id) {
         var query  = Query.query(Criteria.where("author.id").is(id));
 
         var book = mongoTemplate.find(query, Book.class)
@@ -28,6 +28,6 @@ public class AuthorRepositoryImpl implements AuthorRepository {
     public List<Author> findAll() {
         var books = mongoTemplate.findAll(Book.class);
 
-        return books.stream().map(Book::getAuthor).toList();
+        return books.stream().map(Book::getAuthor).distinct().toList();
     }
 }

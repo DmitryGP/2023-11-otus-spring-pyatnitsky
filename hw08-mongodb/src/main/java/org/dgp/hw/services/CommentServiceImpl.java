@@ -22,24 +22,24 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<CommentDto> findById(long id) {
+    public Optional<CommentDto> findById(String id) {
         return commentRepository.findById(id).map(CommentDto::new);
     }
 
 
     @Override
     @Transactional(readOnly = true)
-    public List<CommentDto> findByBookId(long id) {
+    public List<CommentDto> findByBookId(String id) {
         return commentRepository.findByBookId(id).stream().map(CommentDto::new).toList();
     }
 
     @Override
     @Transactional
-    public CommentDto create(String text, long bookId) {
+    public CommentDto create(String text, String bookId) {
         var book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(bookId)));
 
-        var comment = new Comment(0, text, book);
+        var comment = new Comment("", text, book);
 
         var savedComment = commentRepository.save(comment);
 
@@ -48,7 +48,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public CommentDto update(long id, String text) {
+    public CommentDto update(String id, String text) {
         var commentToUpdate = commentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Comment with id=%d not found.".formatted(id)));
 
@@ -61,7 +61,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public void deleteById(long id) {
+    public void deleteById(String id) {
         commentRepository.deleteById(id);
     }
 }

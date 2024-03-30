@@ -3,19 +3,16 @@ package org.dgp.hw.repositories;
 import org.dgp.hw.models.Book;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface BookRepository extends JpaRepository<Book, Long> {
+public interface BookRepository extends MongoRepository<Book, String> {
 
-    @Override
-    @EntityGraph(value = "book-graph")
     List<Book> findAll();
 
-    @Override
-    @EntityGraph(value = "book-graph")
-    Optional<Book> findById(Long id);
+    Optional<Book> findById(String id);
 
 
 }

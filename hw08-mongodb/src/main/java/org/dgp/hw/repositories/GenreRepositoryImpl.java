@@ -1,7 +1,6 @@
 package org.dgp.hw.repositories;
 
 import lombok.AllArgsConstructor;
-import org.dgp.hw.models.Author;
 import org.dgp.hw.models.Book;
 import org.dgp.hw.models.Genre;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -16,7 +15,7 @@ public class GenreRepositoryImpl implements GenreRepository{
 
     private final MongoTemplate mongoTemplate;
     @Override
-    public Optional<Genre> findById(long id) {
+    public Optional<Genre> findById(String id) {
         var query  = Query.query(Criteria.where("genre.id").is(id));
 
         var book = mongoTemplate.find(query, Book.class)
@@ -29,6 +28,6 @@ public class GenreRepositoryImpl implements GenreRepository{
     public List<Genre> findAll() {
         var books = mongoTemplate.findAll(Book.class);
 
-        return books.stream().map(Book::getGenre).toList();
+        return books.stream().map(Book::getGenre).distinct().toList();
     }
 }

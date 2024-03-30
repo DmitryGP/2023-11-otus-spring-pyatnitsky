@@ -24,7 +24,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<BookDto> findById(long id) {
+    public Optional<BookDto> findById(String id) {
 
         var book = bookRepository.findById(id);
 
@@ -43,13 +43,13 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public BookDto create(String title, long authorId, long genreId) {
+    public BookDto create(String title, String authorId, String genreId) {
         var author = authorRepository.findById(authorId)
                 .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
         var genre = genreRepository.findById(genreId)
                 .orElseThrow(() -> new EntityNotFoundException("Genre with id %d not found".formatted(genreId)));
 
-        var book = new Book(0, title, author, genre);
+        var book = new Book("", title, author, genre);
 
         var savedBook = bookRepository.save(book);
 
@@ -58,7 +58,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public BookDto update(long id, String title, long authorId, long genreId) {
+    public BookDto update(String id, String title, String authorId, String genreId) {
 
         var bookToUpdate = bookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Book with id=%d not found".formatted(id)));
@@ -78,7 +78,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public void deleteById(long id) {
+    public void deleteById(String id) {
         bookRepository.deleteById(id);
     }
 }
