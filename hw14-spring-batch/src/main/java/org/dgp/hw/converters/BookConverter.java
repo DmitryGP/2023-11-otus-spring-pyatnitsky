@@ -21,10 +21,10 @@ public class BookConverter {
     }
 
     public String mongoBookToString(BookMongo book) {
-        return "Id: %s, Title: %s, Author Id: %s, Genre Id: %s".formatted(
+        return "Id: %s, Title: %s, Author: {%s}, Genre: [%s]".formatted(
                 book.getId(),
                 book.getTitle(),
-                book.getAuthorId(),
-                book.getGenreId());
+                authorConverter.mongoAuthorToString(book.getAuthor()),
+                genreConverter.mongoGenreToString(book.getGenre()));
     }
 }

@@ -15,7 +15,7 @@ public class BookMongo {
 
     private String title;
 
-    private String authorId;
+    private AuthorMongo author;
 
-    private String genreId;
+    private GenreMongo genre;
 }

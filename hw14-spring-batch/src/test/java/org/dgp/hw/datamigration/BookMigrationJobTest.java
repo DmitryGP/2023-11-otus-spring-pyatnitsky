@@ -1,13 +1,9 @@
 package org.dgp.hw.datamigration;
 
 import org.dgp.hw.datamigration.models.AuthorMongo;
-import org.dgp.hw.datamigration.models.AuthorTemp;
 import org.dgp.hw.datamigration.models.BookMongo;
-import org.dgp.hw.datamigration.models.BookTemp;
 import org.dgp.hw.datamigration.models.CommentMongo;
-import org.dgp.hw.datamigration.models.CommentTemp;
 import org.dgp.hw.datamigration.models.GenreMongo;
-import org.dgp.hw.datamigration.models.GenreTemp;
 import org.dgp.hw.models.Author;
 import org.dgp.hw.models.Book;
 import org.dgp.hw.models.Comment;
@@ -81,11 +77,6 @@ public class BookMigrationJobTest {
         var comments = mongoOperations.findAll(CommentMongo.class);
 
         assertThat(comments).hasSize(6);
-
-        assertThat(mongoOperations.collectionExists(AuthorTemp.class)).isFalse();
-        assertThat(mongoOperations.collectionExists(GenreTemp.class)).isFalse();
-        assertThat(mongoOperations.collectionExists(CommentTemp.class)).isFalse();
-        assertThat(mongoOperations.collectionExists(BookTemp.class)).isFalse();
     }
 
     @Test
@@ -120,14 +111,14 @@ public class BookMigrationJobTest {
 
         assertThat(bookMongo).isNotNull();
 
-        var findAuthor = new Query(Criteria.where("id").is(bookMongo.getAuthorId()));
+        var findAuthor = new Query(Criteria.where("id").is(bookMongo.getAuthor().getId()));
 
         var authorMongo = mongoOperations.findOne(findAuthor, AuthorMongo.class);
 
         assertThat(authorMongo).isNotNull();
         assertThat(authorMongo.getFullName()).isEqualTo(book.getAuthor().getFullName());
 
-        var findGenre = new Query(Criteria.where("id").is(bookMongo.getGenreId()));
+        var findGenre = new Query(Criteria.where("id").is(bookMongo.getGenre().getId()));
 
         var genreMongo = mongoOperations.findOne(findGenre, GenreMongo.class);
 
