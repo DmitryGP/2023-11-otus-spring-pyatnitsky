@@ -30,6 +30,7 @@
         <module>hw11-web-flux</module>
         <module>hw12-spring-security</module>
         <module>hw13-security-authorization</module>
+        <module>hw15-spring-integration</module>
     </modules>
 
     <properties>
