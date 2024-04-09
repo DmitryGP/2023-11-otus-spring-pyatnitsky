@@ -31,6 +31,7 @@
         <module>hw12-spring-security</module>
         <module>hw13-security-authorization</module>
         <module>hw14-spring-batch</module>
+        <module>hw16-spring-actuator</module>
     </modules>
 
     <properties>
