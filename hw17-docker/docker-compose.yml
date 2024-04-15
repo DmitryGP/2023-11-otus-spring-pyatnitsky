@@ -1,5 +1,15 @@
 version: '3'
 services:
+
+  postgres:
+    image: "postgres:13"
+    ports:
+      - "5430:5432"
+    environment:
+      - POSTGRES_USER=usr
+      - POSTGRES_PASSWORD=pwd
+      - POSTGRES_DB=demoDB
+
   app:
     build:
       context: .
@@ -7,15 +17,8 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/demoDB
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5430/demoDB
       - SPRING_DATASOURCE_USERNAME=usr
       - SPRING_DATASOURCE_PASSWORD=pwd
-  postgres:
-    image: "postgres:13"
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_USER=usr
-      - POSTGRES_PASSWORD=pwd
-      - POSTGRES_DB=demoDB
-
+    depends_on:
+      - postgres
