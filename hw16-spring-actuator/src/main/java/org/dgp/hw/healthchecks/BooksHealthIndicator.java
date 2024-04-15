@@ -15,9 +15,19 @@ public class BooksHealthIndicator implements HealthIndicator {
     @Override
     public Health health() {
 
-        var books = bookService.findAll();
+        long bookCount;
 
-        if (books.isEmpty()) {
+        try {
+            bookCount = bookService.booksCount();
+        } catch (Exception exc) {
+            return Health.down()
+                    .withDetail("message", "Internal error in service.")
+                    .withException(exc)
+                    .build();
+        }
+
+
+        if (bookCount == 0) {
             return Health.down()
                     .withDetail("message", "There is no any book.")
                     .build();
