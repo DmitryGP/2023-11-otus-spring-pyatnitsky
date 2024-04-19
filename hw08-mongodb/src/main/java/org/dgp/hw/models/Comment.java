@@ -31,18 +31,17 @@ public class Comment {
 
     @Override
     public boolean equals(Object o) {
-        if(o == null) {
+        if (o == null) {
             return false;
         }
 
-        if(o.getClass() != Author.class) {
+        if (o.getClass() != Author.class) {
             return false;
         }
 
         var another = (Comment) o;
 
-        if(Strings.isNullOrEmpty(another.id))
-        {
+        if (Strings.isNullOrEmpty(another.id)) {
             return false;
         }
 
