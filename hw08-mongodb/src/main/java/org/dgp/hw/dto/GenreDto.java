@@ -10,7 +10,7 @@ import org.dgp.hw.models.Genre;
 @NoArgsConstructor
 public class GenreDto {
 
-    private long id;
+    private String id;
 
     private String name;
 

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class CommentConverter {
 
     public String commentToString(CommentDto comment) {
-        return "Id: %d, text %s"
+        return "Id: %s, text %s"
                 .formatted(comment.getId(),
                         comment.getText());
     }

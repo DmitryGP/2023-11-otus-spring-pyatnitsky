@@ -10,7 +10,7 @@ import org.dgp.hw.models.Book;
 @NoArgsConstructor
 public class BookDto {
 
-    private long id;
+    private String id;
 
     private String title;
 

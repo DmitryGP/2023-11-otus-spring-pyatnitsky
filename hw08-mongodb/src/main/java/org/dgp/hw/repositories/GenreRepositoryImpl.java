@@ -1,4 +1,4 @@
-package org.dgp.hw.repositories;
+/*package org.dgp.hw.repositories;
 
 import lombok.AllArgsConstructor;
 import org.dgp.hw.models.Book;
@@ -30,4 +30,4 @@ public class GenreRepositoryImpl implements GenreRepository{
 
         return books.stream().map(Book::getGenre).distinct().toList();
     }
-}
+}*/

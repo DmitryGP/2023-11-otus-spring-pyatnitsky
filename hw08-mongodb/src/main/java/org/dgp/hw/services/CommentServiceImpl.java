@@ -30,7 +30,9 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional(readOnly = true)
     public List<CommentDto> findByBookId(String id) {
-        return commentRepository.findByBookId(id).stream().map(CommentDto::new).toList();
+        var c = commentRepository.findByBookId(id);
+
+        return c.stream().map(CommentDto::new).toList();
     }
 
     @Override

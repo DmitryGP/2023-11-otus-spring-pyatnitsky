@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Objects;
 
@@ -16,6 +17,7 @@ import java.util.Objects;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Document(collection = "authors")
 public class Author {
 
     @Id
@@ -25,18 +27,17 @@ public class Author {
 
     @Override
     public boolean equals(Object o) {
-        if(o == null) {
+        if (o == null) {
             return false;
         }
 
-        if(o.getClass() != Author.class) {
+        if (o.getClass() != Author.class) {
             return false;
         }
 
         var another = (Author) o;
 
-        if(Strings.isNullOrEmpty(another.id))
-        {
+        if (Strings.isNullOrEmpty(another.id)) {
             return false;
         }
 

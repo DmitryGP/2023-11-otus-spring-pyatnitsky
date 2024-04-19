@@ -1,13 +1,14 @@
 package org.dgp.hw.models;
 
 import com.google.common.base.Strings;
-import lombok.Builder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.springframework.data.annotation.Id;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Objects;
 
@@ -16,6 +17,7 @@ import java.util.Objects;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Document(collection = "genres")
 public class Genre {
 
     @Id
@@ -25,18 +27,17 @@ public class Genre {
 
     @Override
     public boolean equals(Object o) {
-        if(o == null) {
+        if (o == null) {
             return false;
         }
 
-        if(o.getClass() != Genre.class) {
+        if (o.getClass() != Genre.class) {
             return false;
         }
 
         var another = (Genre) o;
 
-        if(Strings.isNullOrEmpty(another.id))
-        {
+        if (Strings.isNullOrEmpty(another.id)) {
             return false;
         }
 

@@ -1,8 +1,6 @@
 package org.dgp.hw.models;
 
 import com.google.common.base.Strings;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,18 +32,17 @@ public class Book {
 
     @Override
     public boolean equals(Object o) {
-        if(o == null) {
+        if (o == null) {
             return false;
         }
 
-        if(o.getClass() != Book.class) {
+        if (o.getClass() != Book.class) {
             return false;
         }
 
         var another = (Book) o;
 
-        if(Strings.isNullOrEmpty(another.id))
-        {
+        if (Strings.isNullOrEmpty(another.id)) {
             return false;
         }
 

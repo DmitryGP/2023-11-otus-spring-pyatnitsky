@@ -10,7 +10,7 @@ import org.dgp.hw.models.Comment;
 @NoArgsConstructor
 public class CommentDto {
 
-    private long id;
+    private String id;
 
     private String text;
 
