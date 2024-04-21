@@ -1,6 +1,6 @@
 package org.dgp.hw.repositories;
 
-import org.dgp.hw.changelogs.TestDataInitializer;
+import org.dgp.hw.datainitialization.TestDataInitializer;
 import org.dgp.hw.models.Genre;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

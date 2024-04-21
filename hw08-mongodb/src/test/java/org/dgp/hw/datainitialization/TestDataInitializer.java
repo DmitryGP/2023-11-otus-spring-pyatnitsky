@@ -1,4 +1,4 @@
-package org.dgp.hw.changelogs;
+package org.dgp.hw.datainitialization;
 
 import lombok.RequiredArgsConstructor;
 import org.dgp.hw.models.Author;

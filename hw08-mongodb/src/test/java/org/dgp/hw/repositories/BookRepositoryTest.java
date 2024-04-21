@@ -1,7 +1,7 @@
 package org.dgp.hw.repositories;
 
 import org.assertj.core.util.Strings;
-import org.dgp.hw.changelogs.TestDataInitializer;
+import org.dgp.hw.datainitialization.TestDataInitializer;
 import org.dgp.hw.models.Author;
 import org.dgp.hw.models.Book;
 import org.dgp.hw.models.Genre;
