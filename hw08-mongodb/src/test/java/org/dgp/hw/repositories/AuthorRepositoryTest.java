@@ -44,11 +44,11 @@ class AuthorRepositoryTest extends AbstractRepositoryTest
 
         var actualAuthor = repository.findById(authorId);
 
-        var expectedAuthor = mongoTemplate.find(new Query(Criteria.where("id").is(authorId)), Author.class);
+        var expectedAuthor = mongoTemplate.findOne(findByIdQuery(authorId), Author.class);
 
         assertThat(actualAuthor).isPresent()
                 .get()
-                .isEqualTo(expectedAuthor.get(0));
+                .isEqualTo(expectedAuthor);
     }
 
     @Test
