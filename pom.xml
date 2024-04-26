@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.0</version>
+        <version>3.2.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -26,6 +26,13 @@
         <module>hw06-jpql</module>
         <module>hw07-spring-data</module>
         <module>hw08-mongodb</module>
+        <module>hw10-ajax</module>
+        <module>hw09-mvc-view</module>
+        <module>hw11-web-flux</module>
+        <module>hw12-spring-security</module>
+        <module>hw13-security-authorization</module>
+        <module>hw15-spring-integration</module>
+        <module>hw14-spring-batch</module>
     </modules>
 
     <properties>
