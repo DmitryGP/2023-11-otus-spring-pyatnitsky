@@ -23,20 +23,11 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
 
     @Override
-    @Transactional(readOnly = true)
     public Optional<BookDto> findById(String id) {
-
-        var book = bookRepository.findById(id);
-
-        if (book.isEmpty()) {
-            return Optional.empty();
-        }
-
-        return book.map(BookDto::new);
+        return bookRepository.findById(id).map(BookDto::new);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<BookDto> findAll() {
         return bookRepository.findAll().stream().map(BookDto::new).toList();
     }

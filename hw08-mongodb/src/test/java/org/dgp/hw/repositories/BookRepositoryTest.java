@@ -2,8 +2,10 @@ package org.dgp.hw.repositories;
 
 import org.assertj.core.util.Strings;
 import org.dgp.hw.datainitialization.TestDataInitializer;
+import org.dgp.hw.events.MongoBookCascadeDeleteEventListener;
 import org.dgp.hw.models.Author;
 import org.dgp.hw.models.Book;
+import org.dgp.hw.models.Comment;
 import org.dgp.hw.models.Genre;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,7 +14,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
@@ -20,6 +25,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Репозиторий для работы с книгами ")
+@Import(MongoBookCascadeDeleteEventListener.class)
 class BookRepositoryTest extends AbstractRepositoryTest {
 
     @Autowired
@@ -95,12 +101,20 @@ class BookRepositoryTest extends AbstractRepositoryTest {
                 .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(bookToSave);
     }
 
-    @DisplayName("должен удалять книгу по id ")
+    @DisplayName("должен удалять книгу со всеми комментариями по id книги")
     @Test
     void shouldDeleteBook() {
         assertThat(mongoTemplate.exists(findByIdQuery("1"), Book.class)).isTrue();
+        assertThat(mongoTemplate
+                .find(new Query(Criteria.where("book").is("1")), Comment.class)
+                .size()).isEqualTo(2);
+
         repository.deleteById("1");
+
         assertThat(mongoTemplate.exists(findByIdQuery("1"), Book.class)).isFalse();
+        assertThat(mongoTemplate
+                .find(new Query(Criteria.where("book").is("1")), Comment.class)
+                .size()).isEqualTo(0);
     }
 
     private static Stream<Arguments> getExpectedBooks() {

@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.event.AfterDeleteEvent;
 public class MongoBookCascadeDeleteEventListener  extends AbstractMongoEventListener<Book> {
 
     private final CommentRepository commentRepository;
+
     @Override
     public void onAfterDelete(AfterDeleteEvent<Book> event) {
         super.onAfterDelete(event);

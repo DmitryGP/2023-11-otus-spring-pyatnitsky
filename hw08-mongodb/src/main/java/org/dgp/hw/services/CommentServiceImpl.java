@@ -21,18 +21,16 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
 
     @Override
-    @Transactional(readOnly = true)
     public Optional<CommentDto> findById(String id) {
         return commentRepository.findById(id).map(CommentDto::new);
     }
 
 
     @Override
-    @Transactional(readOnly = true)
     public List<CommentDto> findByBookId(String id) {
-        var c = commentRepository.findByBookId(id);
-
-        return c.stream().map(CommentDto::new).toList();
+        return commentRepository.findByBookId(id)
+                .stream()
+                .map(CommentDto::new).toList();
     }
 
     @Override
