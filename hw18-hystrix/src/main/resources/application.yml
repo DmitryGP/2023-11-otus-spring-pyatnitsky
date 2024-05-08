@@ -1,0 +1,33 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:maindb
+  sql:
+    init:
+      mode: always
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+      show-sql: false
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowSize: 10
+        permittedNumberOfCallsInHalfOpenState: 4
+        slowCallDurationThreshold: 1s
+        slowCallRateThreshold: 5
+        failureRateThreshold: 5
+        waitDurationInOpenState: 5s
+        minimumNumberOfCalls: 5
+    instances:
+      getDataCircuitBreaker:
+        baseConfig: default
+        waitDurationInOpenState: 6s

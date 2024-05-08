@@ -1,6 +1,6 @@
 package org.dgp.hw.services;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.AllArgsConstructor;
 import org.dgp.hw.dto.CommentDto;
 import org.dgp.hw.exceptions.NotFoundException;
@@ -26,14 +26,14 @@ public class CommentServiceImpl implements CommentService {
     private final CommentMapper commentMapper;
 
     @Override
-    @HystrixCommand(commandKey = "getCommentsKey", fallbackMethod = "findByIdFallback")
+    @CircuitBreaker(name = "getDataCircuitBreaker", fallbackMethod = "findByIdFallback")
     public Optional<CommentDto> findById(long id) {
         return commentRepository.findById(id).map(commentMapper::toDto);
     }
 
 
     @Override
-    @HystrixCommand(commandKey = "getCommentsKey", fallbackMethod = "findByBookIdFallback")
+    @CircuitBreaker(name = "getDataCircuitBreaker", fallbackMethod = "findByBookIdFallback")
     public List<CommentDto> findByBookId(long id) {
         return commentRepository.findByBookId(id).stream().map(commentMapper::toDto).toList();
     }
@@ -51,10 +51,16 @@ public class CommentServiceImpl implements CommentService {
         return commentMapper.toDto(savedComment);
     }
 
-    public List<CommentDto> findByBookIdFallback(long id) {
+    public List<CommentDto> findByBookIdFallback(long id, Exception exc) {
+        var comment = FallbackDataFactory.createComment();
+        comment.getBook().setId(id);
+        return List.of(comment);
+    }
+
+    public Optional<CommentDto> findByIdFallback(long id, Exception exc) {
         var comment = FallbackDataFactory.createComment();
         comment.setId(id);
-        return List.of(comment);
+        return Optional.of(comment);
     }
 
     @Override

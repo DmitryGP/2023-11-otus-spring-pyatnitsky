@@ -1,8 +1,7 @@
 package org.dgp.hw.services;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
-import org.dgp.hw.dto.AuthorDto;
 import org.dgp.hw.dto.GenreDto;
 import org.dgp.hw.mappers.GenreMapper;
 import org.dgp.hw.repositories.GenreRepository;
@@ -10,7 +9,6 @@ import org.dgp.hw.utils.FallbackDataFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -23,12 +21,12 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     @Transactional(readOnly = true)
-    @HystrixCommand(commandKey = "getGenresKey", fallbackMethod = "findAllFallback")
+    @CircuitBreaker(name = "getDataCircuitBreaker", fallbackMethod = "findAllFallback")
     public List<GenreDto> findAll() {
         return genreRepository.findAll().stream().map(genreMapper::toDto).toList();
     }
 
-    public List<GenreDto> findAllFallback() {
+    public List<GenreDto> findAllFallback(Exception exc) {
         return List.of(FallbackDataFactory.createGenre());
     }
 }

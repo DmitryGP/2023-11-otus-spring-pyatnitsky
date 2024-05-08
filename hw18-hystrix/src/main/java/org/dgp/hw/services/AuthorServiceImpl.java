@@ -1,6 +1,6 @@
 package org.dgp.hw.services;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.dgp.hw.dto.AuthorDto;
 import org.dgp.hw.mappers.AuthorMapper;
@@ -9,7 +9,6 @@ import org.dgp.hw.utils.FallbackDataFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -22,12 +21,12 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     @Transactional(readOnly = true)
-    @HystrixCommand(commandKey = "getAuthorsKey", fallbackMethod = "findAllFallback")
+    @CircuitBreaker(name = "getDataCircuitBreaker", fallbackMethod = "findAllFallback")
     public List<AuthorDto> findAll() {
         return authorRepository.findAll().stream().map(authorMapper::toDto).toList();
     }
 
-    public List<AuthorDto> findAllFallback() {
+    public List<AuthorDto> findAllFallback(Exception exc) {
         return List.of(FallbackDataFactory.createAuthor());
     }
 }

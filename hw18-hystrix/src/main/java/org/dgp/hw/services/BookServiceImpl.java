@@ -1,6 +1,6 @@
 package org.dgp.hw.services;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.dgp.hw.dto.BookCreateDto;
 import org.dgp.hw.dto.BookDto;
@@ -29,9 +29,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    @HystrixCommand(commandKey = "getBooksKey", fallbackMethod = "findByIdFallback")
+    @CircuitBreaker(name = "getDataCircuitBreaker", fallbackMethod = "findByIdFallback")
     public BookDto findById(long id) {
-
         var book = bookRepository.findById(id);
 
         return book.map(bookMapper::toDto).orElseThrow(() ->
@@ -40,7 +39,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    @HystrixCommand(commandKey = "getBooksKey", fallbackMethod = "findAllFallback")
+    @CircuitBreaker(name = "getDataCircuitBreaker", fallbackMethod = "findAllFallback")
     public List<BookDto> findAll() {
         return bookRepository.findAll().stream().map(bookMapper::toDto).toList();
     }
@@ -86,14 +85,14 @@ public class BookServiceImpl implements BookService {
         bookRepository.deleteById(id);
     }
 
-    public BookDto findByIdFallback(long id) {
+    public BookDto findByIdFallback(long id, Exception exc) {
         var book = FallbackDataFactory.createBook();
         book.setId(id);
 
         return book;
     }
 
-    public List<BookDto> findAllFallback() {
+    public List<BookDto> findAllFallback(Exception exc) {
         return List.of(FallbackDataFactory.createBook());
     }
 }
